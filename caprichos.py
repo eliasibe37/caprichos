@@ -7,7 +7,7 @@ import urllib.parse
 # Configuração da página
 st.set_page_config(page_title="Caprichos da Vânia - Vania Leonardo", page_icon="✂️", layout="wide")
 
-# --- ESTILIZAÇÃO FEMININA & ELEGANTE (CSS) ---
+# --- ESTILIZAÇÃO FEMININA & OTIMIZADA PARA MOBILE (CSS) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap');
@@ -21,7 +21,7 @@ st.markdown("""
         font-family: 'Playfair Display', serif;
         color: #b0526e;
         text-align: center;
-        font-size: 2.8rem;
+        font-size: 2rem;
         font-weight: 600;
         margin-bottom: 0px;
     }
@@ -29,10 +29,10 @@ st.markdown("""
     .atelier-subtitle {
         text-align: center;
         color: #8c7366;
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         font-weight: 500;
-        margin-top: 5px;
-        margin-bottom: 5px;
+        margin-top: 2px;
+        margin-bottom: 2px;
     }
 
     .atelier-slogan {
@@ -40,23 +40,29 @@ st.markdown("""
         font-style: italic;
         color: #b0526e;
         text-align: center;
-        font-size: 1.2rem;
-        margin-bottom: 25px;
+        font-size: 1.05rem;
+        margin-bottom: 15px;
     }
 
-    /* Cartões de Métricas */
+    /* Otimização de Métricas Lado a Lado no Celular */
     div[data-testid="stMetric"] {
         background-color: #ffffff;
         border: 1px solid #f2d6dc;
-        padding: 15px;
+        padding: 8px 10px;
         border-radius: 12px;
-        box-shadow: 0px 4px 10px rgba(176, 82, 110, 0.05);
+        box-shadow: 0px 2px 8px rgba(176, 82, 110, 0.05);
         text-align: center;
     }
     
     div[data-testid="stMetricLabel"] {
         color: #8c7366 !important;
         font-weight: 500;
+        font-size: 0.85rem !important;
+    }
+
+    div[data-testid="stMetricValue"] {
+        font-size: 1.5rem !important;
+        color: #b0526e !important;
     }
 
     /* Cartões de Clientes / Resumo */
@@ -64,7 +70,7 @@ st.markdown("""
         background: linear-gradient(135deg, #ffffff 0%, #fff8f9 100%);
         border-left: 6px solid #b0526e;
         border-radius: 12px;
-        padding: 18px;
+        padding: 15px;
         margin-bottom: 15px;
         box-shadow: 0px 3px 12px rgba(0,0,0,0.04);
         border-top: 1px solid #fce4e9;
@@ -92,6 +98,7 @@ st.markdown("""
 
     hr {
         border-color: #f2d6dc;
+        margin: 15px 0;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -169,42 +176,37 @@ if st.session_state.pagina == "🌸 Início / Capa":
     st.markdown("<p class='atelier-subtitle'>Vania Leonardo | Designer de Moda & Costura Sob Medida ✂️</p>", unsafe_allow_html=True)
     st.markdown("<p class='atelier-slogan'>\"Quando ama o que se faz, se faz com capricho. 🥰\"</p>", unsafe_allow_html=True)
     
-    # --- MÉTRICAS DE RESUMO ---
+    # --- MÉTRICAS COMPACTAS LADO A LADO ---
     conn = get_connection()
     df_total = pd.read_sql_query("SELECT * FROM clientes", conn)
     conn.close()
 
-    col_m1, col_m2, col_m3 = st.columns(3)
+    col_m1, col_m2 = st.columns(2)
     with col_m1:
-        st.metric(label="👥 Clientes Cadastradas", value=len(df_total))
+        st.metric(label="👥 Clientes", value=len(df_total))
     with col_m2:
-        st.metric(label="🪡 Fichas de Medidas", value=len(df_total))
-    with col_m3:
-        st.metric(label="✨ Ateliê", value="Aberto 🟢")
+        st.metric(label="🪡 Fichas Salvas", value=len(df_total))
 
     st.markdown("---")
-    st.markdown("<h3 style='color: #b0526e; text-align: center;'>✨ Você sonha, nós Realizamos!</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #8c7366;'>Selecione o que deseja realizar agora:</p>", unsafe_allow_html=True)
-    st.write("")
+    st.markdown("<h3 style='color: #b0526e; text-align: center; margin-bottom: 5px;'>✨ Você sonha, nós Realizamos!</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #8c7366; font-size: 0.9rem;'>Selecione o que deseja realizar agora:</p>", unsafe_allow_html=True)
 
     # --- BLOCOS / CARTÕES CLICÁVEIS ---
     col_card1, col_card2 = st.columns(2)
 
     with col_card1:
         with st.container(border=True):
-            st.markdown("<h3 style='color: #b0526e;'>📝 <b>Nova Ficha de Medidas</b></h3>", unsafe_allow_html=True)
-            st.markdown("Cadastre os dados da cliente, insira as **17 medidas**, defina datas de entrega/evento, valor do orçamento e observações do modelo.")
-            st.write("")
-            if st.button("✨ Ir para Cadastrar Cliente", type="primary", use_container_width=True):
+            st.markdown("<h4 style='color: #b0526e; margin-bottom: 5px;'>📝 <b>Nova Ficha</b></h4>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size: 0.85rem; color: #555;'>Cadastre dados, 17 medidas, datas e orçamento.</p>", unsafe_allow_html=True)
+            if st.button("✨ Cadastrar Cliente", type="primary", use_container_width=True):
                 st.session_state.pagina = "📝 Cadastrar Cliente"
                 st.rerun()
 
     with col_card2:
         with st.container(border=True):
-            st.markdown("<h3 style='color: #b0526e;'>🔍 <b>Consultar & Enviar WhatsApp</b></h3>", unsafe_allow_html=True)
-            st.markdown("Busque por clientes salvas, consulte orçamentos e envie a **ficha de medidas completa formatada direto no WhatsApp**.")
-            st.write("")
-            if st.button("📲 Ir para Consultar Fichas", type="primary", use_container_width=True):
+            st.markdown("<h4 style='color: #b0526e; margin-bottom: 5px;'>🔍 <b>Consultar Fichas</b></h4>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size: 0.85rem; color: #555;'>Busque por clientes e envie pelo WhatsApp.</p>", unsafe_allow_html=True)
+            if st.button("📲 Consultar / WhatsApp", type="primary", use_container_width=True):
                 st.session_state.pagina = "🔍 Consultar Fichas & WhatsApp"
                 st.rerun()
 
@@ -340,7 +342,7 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
                 if row['observacoes']:
                     st.info(f"📝 **Observações do Modelo:** {row['observacoes']}")
 
-                # --- MENSAGEM DO WHATSAPP COM SLOGANS OFICIAIS ---
+                # --- MENSAGEM DO WHATSAPP ---
                 msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
                 msg += f"👗 _Vania Leonardo | Designer de Moda_\n"
                 msg += f"✂️ _Costura sob medida_\n"
