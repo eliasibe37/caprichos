@@ -167,7 +167,7 @@ st.sidebar.markdown("---")
 
 menu = st.sidebar.radio(
     "Navegação",
-    ["🏠 Início", "📝 Cadastrar Medida", "🔍 Consultar Clientes"],
+    ["🏠 Início", "📏 Cadastrar Medida", "🔍 Consultar Clientes"],
     key="menu_selecionado"
 )
 
@@ -186,31 +186,31 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
 
     col_card1, col_card2 = st.columns(2)
     
-    # Cartão 1: Nova Ficha
+    # Cartão 1: Nova Medida
     with col_card1:
         st.markdown("""
             <div class="card-feminino">
-                <h3>📝 Nova Medida</h3>
+                <h3>📏 Nova Medida</h3>
                 <p>Cadastre medidas e datas da cliente.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.button("✨ Abrir", key="btn_nova_ficha", on_click=ir_para_pagina, args=("📝 Cadastrar Ficha",), use_container_width=True)
+        st.button("✨ Abrir", key="btn_nova_medida", on_click=ir_para_pagina, args=("📏 Cadastrar Medida",), use_container_width=True)
     
     # Cartão 2: Consultar
     with col_card2:
         st.markdown("""
             <div class="card-feminino">
                 <h3>🔍 Buscar</h3>
-                <p>Consulte fichas e envie no WhatsApp.</p>
+                <p>Consulte medidas e envie no WhatsApp.</p>
             </div>
         """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
     st.markdown("<br><hr>", unsafe_allow_html=True)
 
-# --- TELA 2: CADASTRO / EDIÇÃO ---
-elif st.session_state["menu_selecionado"] == "📝 Cadastrar Ficha":
-    st.title("📝 Cadastrar Nova Ficha")
+# --- TELA 2: CADASTRO DE MEDIDAS ---
+elif st.session_state["menu_selecionado"] == "📏 Cadastrar Medida":
+    st.title("📏 Cadastrar Nova Medida")
     
     st.markdown("### Dados do Cliente")
     nome = st.text_input("Nome do Cliente *")
@@ -251,7 +251,7 @@ elif st.session_state["menu_selecionado"] == "📝 Cadastrar Ficha":
     st.markdown("---")
     observacoes = st.text_area("Observações Gerais / Detalhes do Modelo")
 
-    if st.button("💾 Salvar Ficha de Medidas", type="primary", use_container_width=True):
+    if st.button("💾 Salvar Medidas", type="primary", use_container_width=True):
         if not nome.strip():
             st.error("Por favor, preencha pelo menos o nome do cliente!")
         else:
@@ -273,7 +273,7 @@ elif st.session_state["menu_selecionado"] == "📝 Cadastrar Ficha":
             ))
             conn.commit()
             conn.close()
-            st.success(f"Ficha de **{nome}** salva com sucesso!")
+            st.success(f"Medidas de **{nome}** salvas com sucesso!")
 
 # --- TELA 3: CONSULTA E WHATSAPP ---
 elif st.session_state["menu_selecionado"] == "🔍 Consultar Clientes":
@@ -322,7 +322,7 @@ elif st.session_state["menu_selecionado"] == "🔍 Consultar Clientes":
                     st.markdown(f"**Obs:** {row['observacoes']}")
 
                 # Gerar mensagem tratada para WhatsApp
-                msg = f"*FICHA DE MEDIDAS - CAPRICHOS DA VÂNIA*\n"
+                msg = f"*RELATÓRIO DE MEDIDAS - CAPRICHOS DA VÂNIA*\n"
                 msg += f"👤 *Cliente:* {row['nome']}\n"
                 msg += f"📦 *Data Entrega:* {row['data_entrega']}\n"
                 msg += f"🎉 *Data Evento:* {row['data_evento']}\n\n"
