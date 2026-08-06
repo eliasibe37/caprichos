@@ -5,12 +5,11 @@ from datetime import date
 import urllib.parse
 
 # Configuração da página
-st.set_page_config(page_title="Caprichos da Vânia - Ateliê", page_icon="🧵", layout="wide")
+st.set_page_config(page_title="Caprichos da Vânia - Vania Leonardo", page_icon="✂️", layout="wide")
 
 # --- ESTILIZAÇÃO FEMININA & ELEGANTE (CSS) ---
 st.markdown("""
     <style>
-    /* Importação de Fonte Elegante */
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap');
 
     html, body, [class*="css"] {
@@ -18,7 +17,6 @@ st.markdown("""
         background-color: #fdfbf7;
     }
 
-    /* Cabeçalho Principal */
     .atelier-title {
         font-family: 'Playfair Display', serif;
         color: #b0526e;
@@ -28,10 +26,19 @@ st.markdown("""
         margin-bottom: 0px;
     }
 
+    .atelier-subtitle {
+        text-align: center;
+        color: #8c7366;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
     .atelier-slogan {
         font-family: 'Playfair Display', serif;
         font-style: italic;
-        color: #8c7366;
+        color: #b0526e;
         text-align: center;
         font-size: 1.2rem;
         margin-bottom: 25px;
@@ -65,7 +72,6 @@ st.markdown("""
         border-bottom: 1px solid #fce4e9;
     }
 
-    /* Botões do Streamlit */
     .stButton > button {
         border-radius: 25px !important;
         font-weight: 500 !important;
@@ -84,7 +90,6 @@ st.markdown("""
         box-shadow: 0px 4px 12px rgba(176, 82, 110, 0.3);
     }
 
-    /* Linhas Divisórias */
     hr {
         border-color: #f2d6dc;
     }
@@ -138,8 +143,8 @@ if 'pagina' not in st.session_state:
 
 # --- MENU LATERAL (SIDEBAR) ---
 with st.sidebar:
-    st.markdown("<h2 style='text-align: center; color: #b0526e;'>🧵 Caprichos da Vânia</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #8c7366; font-size: 0.9rem;'><i>Ateliê de Costura Sob Medida</i></p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: #b0526e;'>✂️ Vania Leonardo</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #8c7366; font-size: 0.95rem; margin-top: -10px;'><b>Designer de Moda</b></p>", unsafe_allow_html=True)
     st.markdown("---")
     
     opcoes_menu = ["🌸 Início / Capa", "📝 Cadastrar Cliente", "🔍 Consultar Fichas & WhatsApp"]
@@ -151,7 +156,8 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("""
         <div style='background-color: #fff0f3; padding: 12px; border-radius: 10px; border: 1px solid #fce4e9; text-align: center;'>
-            <p style='margin:0; color: #b0526e; font-size: 0.85rem;'>💖 <b>Amor em cada ponto, perfeição em cada medida.</b></p>
+            <p style='margin:0; color: #b0526e; font-size: 0.85rem;'>✨ <i>"Você sonha, nós Realizamos!"</i></p>
+            <p style='margin:5px 0 0 0; color: #8c7366; font-size: 0.8rem;'><b>Costura sob medida ✂️</b></p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -159,8 +165,9 @@ with st.sidebar:
 # 🌸 TELA 1: CAPA (INÍCIO)
 # ==============================================================================
 if st.session_state.pagina == "🌸 Início / Capa":
-    st.markdown("<h1 class='atelier-title'>✂️ Ateliê Caprichos da Vânia</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='atelier-slogan'>\"A arte de vestir seus sonhos com elegância e carinho.\"</p>", unsafe_allow_html=True)
+    st.markdown("<h1 class='atelier-title'>✂️ Caprichos da Vânia</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='atelier-subtitle'>Vania Leonardo | Designer de Moda & Costura Sob Medida ✂️</p>", unsafe_allow_html=True)
+    st.markdown("<p class='atelier-slogan'>\"Quando ama o que se faz, se faz com capricho. 🥰\"</p>", unsafe_allow_html=True)
     
     # --- MÉTRICAS DE RESUMO ---
     conn = get_connection()
@@ -169,15 +176,15 @@ if st.session_state.pagina == "🌸 Início / Capa":
 
     col_m1, col_m2, col_m3 = st.columns(3)
     with col_m1:
-        st.metric(label="👥 Clientes Especiais", value=len(df_total))
+        st.metric(label="👥 Clientes Cadastradas", value=len(df_total))
     with col_m2:
-        st.metric(label="🪡 Fichas Cadastradas", value=len(df_total))
+        st.metric(label="🪡 Fichas de Medidas", value=len(df_total))
     with col_m3:
         st.metric(label="✨ Ateliê", value="Aberto 🟢")
 
     st.markdown("---")
-    st.markdown("<h3 style='color: #b0526e; text-align: center;'>🌸 Como posso te ajudar agora, Vânia?</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #8c7366;'>Escolha uma das opções abaixo para navegar rapidamente:</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #b0526e; text-align: center;'>✨ Você sonha, nós Realizamos!</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #8c7366;'>Selecione o que deseja realizar agora:</p>", unsafe_allow_html=True)
     st.write("")
 
     # --- BLOCOS / CARTÕES CLICÁVEIS ---
@@ -186,7 +193,7 @@ if st.session_state.pagina == "🌸 Início / Capa":
     with col_card1:
         with st.container(border=True):
             st.markdown("<h3 style='color: #b0526e;'>📝 <b>Nova Ficha de Medidas</b></h3>", unsafe_allow_html=True)
-            st.markdown("Cadastre uma nova cliente, insira as **17 medidas**, informe prazos de entrega/evento, orçamento e observações do modelo.")
+            st.markdown("Cadastre os dados da cliente, insira as **17 medidas**, defina datas de entrega/evento, valor do orçamento e observações do modelo.")
             st.write("")
             if st.button("✨ Ir para Cadastrar Cliente", type="primary", use_container_width=True):
                 st.session_state.pagina = "📝 Cadastrar Cliente"
@@ -195,7 +202,7 @@ if st.session_state.pagina == "🌸 Início / Capa":
     with col_card2:
         with st.container(border=True):
             st.markdown("<h3 style='color: #b0526e;'>🔍 <b>Consultar & Enviar WhatsApp</b></h3>", unsafe_allow_html=True)
-            st.markdown("Busque por clientes salvas, veja os orçamentos acordados, detalhes do vestido e envie a **ficha completa via WhatsApp**.")
+            st.markdown("Busque por clientes salvas, consulte orçamentos e envie a **ficha de medidas completa formatada direto no WhatsApp**.")
             st.write("")
             if st.button("📲 Ir para Consultar Fichas", type="primary", use_container_width=True):
                 st.session_state.pagina = "🔍 Consultar Fichas & WhatsApp"
@@ -205,8 +212,8 @@ if st.session_state.pagina == "🌸 Início / Capa":
 # 📝 TELA 2: CADASTRAR CLIENTE
 # ==============================================================================
 elif st.session_state.pagina == "📝 Cadastrar Cliente":
-    st.markdown("<h2 style='color: #b0526e;'>📝 Cadastrar Nova Ficha de Medidas</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #8c7366;'>Preencha os dados da cliente para salvar no banco do ateliê:</p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #b0526e;'>📝 Cadastrar Ficha de Medidas</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #8c7366;'>Preencha as informações da cliente para salvar no sistema do ateliê:</p>", unsafe_allow_html=True)
     st.markdown("---")
     
     st.markdown("<h4 style='color: #b0526e;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
@@ -275,13 +282,13 @@ elif st.session_state.pagina == "📝 Cadastrar Cliente":
             ))
             conn.commit()
             conn.close()
-            st.success(f"🎉 Ficha de **{nome}** cadastrada com sucesso com todo carinho!")
+            st.success(f"🎉 Ficha de **{nome}** cadastrada com sucesso!")
 
 # ==============================================================================
 # 🔍 TELA 3: CONSULTAR FICHAS & WHATSAPP
 # ==============================================================================
 elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
-    st.markdown("<h2 style='color: #b0526e;'>🔍 Consultar Fichas & Enviar Mensagens</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #b0526e;'>🔍 Consultar Fichas & WhatsApp</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
     conn = get_connection()
@@ -291,7 +298,7 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
     if df.empty:
         st.info("Nenhuma cliente cadastrada ainda.")
     else:
-        busca = st.text_input("🔎 Digite um nome para filtrar no ateliê")
+        busca = st.text_input("🔎 Digite o nome para buscar no ateliê")
         if busca:
             df = df[df['nome'].str.contains(busca, case=False, na=False)]
 
@@ -333,10 +340,11 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
                 if row['observacoes']:
                     st.info(f"📝 **Observações do Modelo:** {row['observacoes']}")
 
-                # --- MENSAGEM DO WHATSAPP ---
+                # --- MENSAGEM DO WHATSAPP COM SLOGANS OFICIAIS ---
                 msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
-                msg += f"✂️ _Ateliê de Costura Sob Medida_\n"
-                msg += f"🌸 _\"Amor em cada ponto, perfeição em cada medida.\"_\n\n"
+                msg += f"👗 _Vania Leonardo | Designer de Moda_\n"
+                msg += f"✂️ _Costura sob medida_\n"
+                msg += f"💖 _\"Você sonha, nós Realizamos!\"_\n\n"
                 msg += f"👤 *Cliente:* {row['nome']}\n"
                 if row['orcamento']:
                     msg += f"💰 *Valor do Orçamento:* R$ {row['orcamento']}\n"
@@ -360,7 +368,8 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
                 if row['observacoes']:
                     msg += f"\n📝 *Observações / Detalhes:*\n_{row['observacoes']}_\n"
                 
-                msg += f"\nAgradecemos pela confiança! Qualquer dúvida estamos à disposição. 💖"
+                msg += f"\n🥰 _Quando ama o que se faz, se faz com capricho._\n"
+                msg += f"Agradecemos pela confiança! Qualquer dúvida estou à disposição. 💖"
 
                 texto_url = urllib.parse.quote(msg)
                 num_tel = "".join(filter(str.isdigit, str(row['telefone'])))
