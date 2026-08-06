@@ -186,7 +186,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
 
     col_card1, col_card2 = st.columns(2)
     
-    # Cartão 1: Nova Medida
+    # Cartão 1: Nova Ficha
     with col_card1:
         st.markdown("""
             <div class="card-feminino">
@@ -194,7 +194,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
                 <p>Cadastre medidas e datas da cliente.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.button("✨ Abrir", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Medida",), use_container_width=True)
+        st.button("✨ Abrir", key="btn_nova_ficha", on_click=ir_para_pagina, args=("📝 Cadastrar Ficha",), use_container_width=True)
     
     # Cartão 2: Consultar
     with col_card2:
