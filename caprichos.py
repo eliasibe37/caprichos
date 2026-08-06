@@ -20,12 +20,27 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
-    /* Espaçamento superior da página */
+    /* CORREÇÃO DO TOPO: Dá espaço suficiente para o título não sumir/cortar */
     .block-container {
-        padding-top: 1.2rem !important;
-        padding-bottom: 0.8rem !important;
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
+        padding-top: 3.5rem !important;
+        padding-bottom: 1rem !important;
+        padding-left: 0.6rem !important;
+        padding-right: 0.6rem !important;
+    }
+
+    /* FORÇAR COLUNAS DO STREAMLIT A FICAREM LADO A LADO MESMO NO MOBILE */
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+
+    [data-testid="column"] {
+        width: 50% !important;
+        flex: 1 1 50% !important;
+        min-width: 0px !important;
     }
 
     /* Título sem cortar topo nem laterais */
@@ -33,9 +48,9 @@ st.markdown("""
         text-align: center;
         color: #7A3043;
         font-family: 'Helvetica Neue', sans-serif;
-        font-size: 1.35rem;
+        font-size: 1.4rem;
         font-weight: bold;
-        margin-top: 5px;
+        margin-top: 0px;
         margin-bottom: 2px;
         line-height: 1.2;
     }
@@ -46,63 +61,55 @@ st.markdown("""
         font-size: 0.85rem;
         font-weight: 500;
         margin-top: 0px;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }
 
     .boas-vindas {
         font-size: 0.8rem !important;
         color: #444;
-        margin-bottom: 12px !important;
+        margin-bottom: 14px !important;
         line-height: 1.25 !important;
         text-align: center;
     }
 
-    /* GRADE PARA FORÇAR OS DOIS BALÕES LADO A LADO NO MOBILE */
-    .grid-baloes {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    /* Estilo dos Balões/Cartões */
+    /* Estilo dos Balões/Cartões Encolhidos */
     .card-feminino-box {
         background-color: #FFF0F3;
         border: 1.5px solid #F4C2C2;
-        border-radius: 12px;
-        padding: 10px 6px;
+        border-radius: 12px 12px 0px 0px;
+        padding: 8px 4px;
         text-align: center;
+        box-sizing: border-box;
+        min-height: 75px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        box-sizing: border-box;
+        justify-content: center;
     }
 
     .card-feminino-box h3 {
         color: #8C3A52 !important;
-        font-size: 0.85rem !important;
-        margin-bottom: 4px !important;
+        font-size: 0.82rem !important;
+        margin-bottom: 2px !important;
         margin-top: 0px !important;
         font-weight: bold;
     }
 
     .card-feminino-box p {
         color: #666;
-        font-size: 0.68rem !important;
-        line-height: 1.15 !important;
-        margin-bottom: 8px !important;
+        font-size: 0.65rem !important;
+        line-height: 1.1 !important;
+        margin: 0 !important;
     }
 
-    /* Estilização dos Botões Streamlit */
+    /* Estilização dos Botões dos Balões */
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
-        border-radius: 8px !important;
+        border-radius: 0px 0px 10px 10px !important;
         border: none !important;
         font-weight: bold !important;
         font-size: 0.72rem !important;
-        padding: 0.35rem 0.2rem !important;
+        padding: 0.3rem 0.1rem !important;
         width: 100% !important;
         transition: all 0.3s ease;
     }
@@ -187,7 +194,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # COLUNAS LADO A LADO DO STREAMLIT
+    # COLUNAS LADO A LADO GARANTIDAS
     c1, c2 = st.columns(2)
     
     with c1:
@@ -197,7 +204,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
                 <p>Cadastre cliente com 17 medidas e prazos.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.button("✨ Cadastrar", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
+        st.button("✨ Nova Medida", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
 
     with c2:
         st.markdown("""
@@ -208,7 +215,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
         """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
-    st.markdown("<hr style='margin-top:12px; margin-bottom:8px;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin-top:14px; margin-bottom:8px;'>", unsafe_allow_html=True)
     st.caption("👈 Abra o menu lateral no canto superior para navegar.")
 
 # --- TELA 2: CADASTRO / EDIÇÃO ---
