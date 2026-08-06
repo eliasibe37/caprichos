@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import date
 import urllib.parse
 
-# Configuração da página (inicia com menu recolhido no celular)
+# Configuração da página
 st.set_page_config(
     page_title="Caprichos da Vânia", 
     page_icon="✂️", 
@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILIZAÇÃO FEMININA (CSS PERSONALIZADO + AJUSTE MOBILE) ---
+# --- ESTILIZAÇÃO FEMININA GERAL (CSS PERSONALIZADO) ---
 st.markdown("""
     <style>
     /* Estilo geral */
@@ -20,7 +20,7 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
-    /* AJUSTE DA LARGURA DA BARRA LATERAL (SIDEBAR) NO CELULAR */
+    /* Ajuste da barra lateral no celular */
     [data-testid="stSidebar"] {
         width: 270px !important;
         max-width: 75vw !important;
@@ -36,41 +36,46 @@ st.markdown("""
     .slogan {
         text-align: center;
         color: #A3586D;
-        font-size: 1.15rem;
+        font-size: 1rem;
         font-weight: 500;
-        margin-top: -10px;
-        margin-bottom: 25px;
+        margin-top: -15px;
+        margin-bottom: 15px;
     }
 
-    /* Cartões Personalizados da Tela Inicial */
+    /* Cartões Personalizados da Tela Inicial (Mais compactos) */
     .card-feminino {
         background-color: #FFF0F3;
         border: 2px solid #F4C2C2;
-        border-radius: 15px 15px 0px 0px;
-        padding: 20px;
+        border-radius: 12px 12px 0px 0px;
+        padding: 15px 10px;
         text-align: center;
         margin-bottom: 0px;
+        height: 100%;
     }
     
     .card-feminino h3 {
         color: #8C3A52 !important;
-        margin-bottom: 8px;
+        margin-bottom: 5px;
+        font-size: 1.15rem;
     }
     
     .card-feminino p {
         color: #666;
-        font-size: 0.95rem;
+        font-size: 0.85rem;
+        line-height: 1.2;
+        margin-bottom: 5px;
     }
 
-    /* Ajuste de Botões para tom Rosa Chá */
+    /* Botões Padrão */
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
-        border-radius: 0px 0px 15px 15px !important;
+        border-radius: 0px 0px 12px 12px !important;
         border: none !important;
         font-weight: bold !important;
-        padding: 0.6rem 1rem !important;
+        padding: 0.5rem 0.5rem !important;
         transition: all 0.3s ease;
+        width: 100%;
     }
 
     div.stButton > button:hover {
@@ -140,41 +145,71 @@ menu = st.sidebar.radio(
 
 # --- TELA 1: CAPA / INÍCIO ---
 if st.session_state["menu_selecionado"] == "🏠 Início":
-    st.markdown("<h1 style='text-align: center;'>🪡 Caprichos da Vânia</h1>", unsafe_allow_html=True)
+    # CSS EXCLUSIVO PARA A CAPA: Força os cartões a ficarem lado a lado no celular
+    st.markdown("""
+        <style>
+        @media (max-width: 768px) {
+            /* Forçar colunas lado a lado */
+            div[data-testid="stHorizontalBlock"] {
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                gap: 10px !important;
+            }
+            div[data-testid="column"] {
+                width: 50% !important;
+                flex: 1 1 50% !important;
+                min-width: 0 !important;
+            }
+            /* Reduzir textos para caberem bem no mobile */
+            .card-feminino {
+                padding: 10px 5px !important;
+            }
+            .card-feminino h3 {
+                font-size: 1rem !important;
+            }
+            .card-feminino p {
+                font-size: 0.7rem !important;
+            }
+            div.stButton > button {
+                font-size: 0.8rem !important;
+                padding: 0.4rem !important;
+            }
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<h1 style='text-align: center; font-size: 2rem;'>🪡 Caprichos da Vânia</h1>", unsafe_allow_html=True)
     st.markdown("<p class='slogan'>Você Sonha, Nós Realizamos</p>", unsafe_allow_html=True)
     st.markdown("---")
     
     st.markdown("""
-    ### 👋 Olá, Vânia! Seja bem-vinda.
-    Este é o seu sistema exclusivo para registrar e organizar as medidas de suas clientes com facilidade e elegância, Lembre-se Você é a melhor ARRAZA.
+    **👋 Olá, Vânia! Seja bem-vinda.**  
+    Este é o seu sistema para registrar as medidas de suas clientes com facilidade. Lembre-se: Você é a melhor, ARRAZA.
     """)
     
-    st.markdown("<br>", unsafe_allow_html=True)
-
     col_card1, col_card2 = st.columns(2)
     
     # Cartão 1: Nova Ficha
     with col_card1:
         st.markdown("""
             <div class="card-feminino">
-                <h3>📝 Nova Ficha</h3>
-                <p>Cadastre uma nova cliente com todas as 17 medidas e datas do evento/entrega.</p>
+                <h3>📝 Nova</h3>
+                <p>Cadastre uma nova cliente com medidas e datas.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.button("✨ Abrir Nova Ficha", key="btn_nova_ficha", on_click=ir_para_pagina, args=("📝 Cadastrar Ficha",), use_container_width=True)
+        st.button("✨ Abrir", key="btn_nova_ficha", on_click=ir_para_pagina, args=("📝 Cadastrar Ficha",), use_container_width=True)
     
     # Cartão 2: Consultar
     with col_card2:
         st.markdown("""
             <div class="card-feminino">
-                <h3>🔍 Consultar</h3>
-                <p>Busque fichas salvas, veja os detalhes e envie tudo formatado pelo WhatsApp.</p>
+                <h3>🔍 Buscar</h3>
+                <p>Consulte fichas salvas e envie pelo WhatsApp.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.button("🌸 Consultar Clientes", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
+        st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
     st.markdown("<br><hr>", unsafe_allow_html=True)
-    st.caption("👈 Você também pode usar as três listrinhas no canto superior esquerdo para navegar!")
 
 # --- TELA 2: CADASTRO / EDIÇÃO ---
 elif st.session_state["menu_selecionado"] == "📝 Cadastrar Ficha":
