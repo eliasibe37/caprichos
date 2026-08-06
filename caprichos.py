@@ -5,8 +5,8 @@ from datetime import date
 import urllib.parse
 import locale
 
-# Tenta definir a localização global do sistema para Português do Brasil
-for loc in ['pt_BR.UTF-8', 'pt_BR', 'portuguese_brazil']:
+# Tenta configurar locale para PT-BR
+for loc in ['pt_BR.UTF-8', 'pt_BR', 'portuguese_brazil', 'pt_BR.utf8']:
     try:
         locale.setlocale(locale.LC_ALL, loc)
         break
@@ -20,6 +20,9 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed"
 )
+
+# Forçar o atributo HTML de idioma para pt-BR
+st.markdown('<html lang="pt-BR"></html>', unsafe_allow_html=True)
 
 # --- ESTILIZAÇÃO E AJUSTE MOBILE DE PRECISÃO ---
 st.markdown("""
