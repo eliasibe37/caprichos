@@ -5,25 +5,7 @@ from datetime import date
 import urllib.parse
 
 # Configuração da página
-st.set_page_config(page_title="Caprichos da Vânia", page_icon="✂️", layout="wide")
-
-# Estilização CSS personalizada para os cartões
-st.markdown("""
-    <style>
-    .metric-card {
-        background-color: #f0f2f6;
-        padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid #ff4b4b;
-        margin-bottom: 10px;
-    }
-    .main-header {
-        text-align: center;
-        padding: 10px;
-        color: #ff4b4b;
-    }
-    </style>
-""", unsafe_allow_html=True)
+st.set_page_config(page_title="Caprichos da Vânia", page_icon="✂️", layout="centered")
 
 # --- CONEXÃO BANCO DE DADOS ---
 def get_connection():
@@ -40,7 +22,6 @@ def init_db():
             telefone TEXT,
             data_entrega TEXT,
             data_evento TEXT,
-            orcamento TEXT,
             ombro TEXT,
             cava_frente TEXT,
             cava_costas TEXT,
@@ -66,77 +47,54 @@ def init_db():
 
 init_db()
 
-# --- CABEÇALHO PRINCIPAL ---
-st.markdown("<h1 class='main-header'>✂️ Ateliê Caprichos da Vânia</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>Gestão de Clientes, Agendamentos & Ficha de Medidas</p>", unsafe_allow_html=True)
-st.markdown("---")
+# --- CABEÇALHO ---
+st.title("✂️ Caprichos da Vânia")
+st.subheader("Ficha de Medidas de Clientes")
 
-# --- PAINEL DE CARTÕES (MÉTRICAS RÁPIDAS) ---
-conn = get_connection()
-df_total = pd.read_sql_query("SELECT * FROM clientes", conn)
-conn.close()
+tab1, tab2 = st.tabs(["📝 Cadastrar / Editar Cliente", "🔍 Consultar Clientes"])
 
-col_m1, col_m2, col_m3 = st.columns(3)
-with col_m1:
-    st.metric(label="👥 Clientes Cadastrados", value=len(df_total))
-with col_m2:
-    st.metric(label="✂️ Atendimentos Ativos", value=len(df_total))
-with col_m3:
-    st.metric(label="✨ Status do Sistema", value="Online 🟢")
-
-st.markdown("---")
-
-# --- ABAS PRINCIPAIS ---
-tab1, tab2 = st.tabs(["📝 Nova Ficha / Cadastrar Cliente", "🔍 Consultar Fichas & WhatsApp"])
-
-# --- ABA 1: CADASTRO ---
+# --- ABA 1: CADASTRO / EDIÇÃO ---
 with tab1:
-    st.markdown("### 👤 Dados do Cliente & Prazos")
+    st.markdown("### Dados Gerais")
+    nome = st.text_input("Nome do Cliente *")
+    telefone = st.text_input("Telefone (WhatsApp)")
     
-    col_a, col_b, col_c = st.columns([2, 1, 1])
-    with col_a:
-        nome = st.text_input("Nome do Cliente *")
-    with col_b:
-        telefone = st.text_input("Telefone (WhatsApp)")
-    with col_c:
-        orcamento = st.text_input("Valor do Orçamento (R$)", placeholder="Ex: 250,00")
-
     col_dt1, col_dt2 = st.columns(2)
     with col_dt1:
-        data_entrega = st.date_input("📦 Data da Entrega", value=date.today())
+        data_entrega = st.date_input("Data da Entrega", value=date.today())
     with col_dt2:
-        data_evento = st.date_input("🎉 Data do Evento", value=date.today())
+        data_evento = st.date_input("Data do Evento", value=date.today())
 
     st.markdown("---")
-    st.markdown("### 📏 Ficha Geral de Medidas")
+    st.markdown("### 📏 Medidas Gerais")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        ombro = st.text_input("📏 Ombro")
-        cava_frente = st.text_input("📐 Cava frente")
-        cava_costas = st.text_input("📐 Cava costas")
-        altura_busto = st.text_input("🪡 Altura do busto")
-        busto = st.text_input("👗 Busto")
-        separacao_busto = st.text_input("↔️ Separação do busto")
-        altura_cintura = st.text_input("🪡 Altura da cintura")
-        cintura_alta = st.text_input("⏳ Cintura alta")
-        cintura_baixa = st.text_input("⏳ Cintura baixa")
+        ombro = st.text_input("Ombro")
+        cava_frente = st.text_input("Cava frente")
+        cava_costas = st.text_input("Cava costas")
+        altura_busto = st.text_input("Altura do busto")
+        busto = st.text_input("Busto")
+        separacao_busto = st.text_input("Separação do busto")
+        altura_cintura = st.text_input("Altura da cintura")
+        cintura_alta = st.text_input("Cintura alta")
+        cintura_baixa = st.text_input("Cintura baixa")
 
     with col2:
-        altura_quadril = st.text_input("🪡 Altura do quadril")
-        quadril = st.text_input("🧵 Quadril")
-        tamanho_vestido = st.text_input("👗 Tamanho vestido")
-        tamanho_saia = st.text_input("🥻 Tamanho saia")
-        tamanho_blusa = st.text_input("👔 Tamanho blusa")
-        tamanho_manga = st.text_input("📏 Tamanho manga")
-        largura_manga = st.text_input("📐 Largura manga")
-        colarinho = st.text_input("👔 Colarinho")
+        altura_quadril = st.text_input("Altura do quadril")
+        quadril = st.text_input("Quadril")
+        tamanho_vestido = st.text_input("Tamanho vestido")
+        tamanho_saia = st.text_input("Tamanho saia")
+        tamanho_blusa = st.text_input("Tamanho blusa")
+        tamanho_manga = st.text_input("Tamanho manga")
+        largura_manga = st.text_input("Largura manga")
+        colarinho = st.text_input("Colarinho")
 
     st.markdown("---")
-    observacoes = st.text_area("📝 Observações do Modelo / Detalhes do Pedido")
+    observacoes = st.text_area("Observações Gerais / Detalhes do Modelo")
 
-    if st.button("💾 Salvar Ficha do Cliente", type="primary", use_container_width=True):
+    if st.button("💾 Salvar Ficha", type="primary", use_container_width=True):
         if not nome.strip():
             st.error("Por favor, preencha pelo menos o nome do cliente!")
         else:
@@ -144,93 +102,81 @@ with tab1:
             c = conn.cursor()
             c.execute('''
                 INSERT INTO clientes (
-                    nome, telefone, data_entrega, data_evento, orcamento, ombro, cava_frente, cava_costas, 
+                    nome, telefone, data_entrega, data_evento, ombro, cava_frente, cava_costas, 
                     altura_busto, busto, separacao_busto, altura_cintura, cintura_alta, cintura_baixa, 
                     altura_quadril, quadril, tamanho_vestido, tamanho_saia, tamanho_blusa, tamanho_manga, 
                     largura_manga, colarinho, observacoes
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
-                nome, telefone, data_entrega.strftime("%d/%m/%Y"), data_evento.strftime("%d/%m/%Y"),
-                orcamento, ombro, cava_frente, cava_costas, altura_busto, busto, separacao_busto, 
+                nome, telefone, data_entrega.strftime("%d/%m/%Y"), data_evento.strftime("%d/%m/%Y"), 
+                ombro, cava_frente, cava_costas, altura_busto, busto, separacao_busto, 
                 altura_cintura, cintura_alta, cintura_baixa, altura_quadril, quadril, 
                 tamanho_vestido, tamanho_saia, tamanho_blusa, tamanho_manga, largura_manga, 
                 colarinho, observacoes
             ))
             conn.commit()
             conn.close()
-            st.success(f"🎉 Ficha de **{nome}** cadastrada com sucesso!")
-            st.rerun()
+            st.success(f"Ficha de **{nome}** salva com sucesso!")
 
-# --- ABA 2: CONSULTA & ENVIO ---
+# --- ABA 2: CONSULTA E ENVIO PARA WHATSAPP ---
 with tab2:
-    st.markdown("### 🔎 Buscar e Gerenciar Fichas")
+    st.markdown("### Buscar Fichas Salvas")
     conn = get_connection()
     df = pd.read_sql_query("SELECT * FROM clientes ORDER BY id DESC", conn)
     conn.close()
 
     if df.empty:
-        st.info("Nenhum cliente cadastrado ainda. Utilize a aba acima para cadastrar!")
+        st.info("Nenhum cliente cadastrado ainda.")
     else:
-        busca = st.text_input("🔍 Digite o nome para filtrar")
+        busca = st.text_input("🔎 Filtrar por Nome")
         if busca:
             df = df[df['nome'].str.contains(busca, case=False, na=False)]
 
         for _, row in df.iterrows():
-            valor_orc = f"R$ {row['orcamento']}" if row['orcamento'] else "Não informado"
-            
-            # Cartão de exibição por cliente
-            with st.expander(f"👤 {row['nome']} | 📦 Entrega: {row['data_entrega']} | 💰 Orçamento: {valor_orc}"):
-                
-                st.markdown(f"""
-                <div class='metric-card'>
-                    <h4>👤 <b>{row['nome']}</b></h4>
-                    <p><b>📱 Telefone:</b> {row['telefone']} | <b>💰 Orçamento:</b> {valor_orc}</p>
-                    <p><b>📦 Data da Entrega:</b> {row['data_entrega']} | <b>🎉 Data do Evento:</b> {row['data_evento']}</p>
-                </div>
-                """, unsafe_allow_html=True)
+            with st.expander(f"👤 {row['nome']} | 📦 Entrega: {row['data_entrega']}"):
+                st.markdown(f"**Telefone:** {row['telefone']}")
+                st.markdown(f"🗓️ **Data da Entrega:** {row['data_entrega']} | 🎉 **Data do Evento:** {row['data_evento']}")
+                st.markdown("---")
                 
                 c_m1, c_m2 = st.columns(2)
                 with c_m1:
-                    st.write(f"📏 **Ombro:** {row['ombro']}")
-                    st.write(f"📐 **Cava frente:** {row['cava_frente']}")
-                    st.write(f"📐 **Cava costas:** {row['cava_costas']}")
-                    st.write(f"🪡 **Altura do busto:** {row['altura_busto']}")
-                    st.write(f"👗 **Busto:** {row['busto']}")
-                    st.write(f"↔️ **Separação do busto:** {row['separacao_busto']}")
-                    st.write(f"🪡 **Altura da cintura:** {row['altura_cintura']}")
-                    st.write(f"⏳ **Cintura alta:** {row['cintura_alta']}")
-                    st.write(f"⏳ **Cintura baixa:** {row['cintura_baixa']}")
+                    st.write(f"• **Ombro:** {row['ombro']}")
+                    st.write(f"• **Cava frente:** {row['cava_frente']}")
+                    st.write(f"• **Cava costas:** {row['cava_costas']}")
+                    st.write(f"• **Altura do busto:** {row['altura_busto']}")
+                    st.write(f"• **Busto:** {row['busto']}")
+                    st.write(f"• **Separação do busto:** {row['separacao_busto']}")
+                    st.write(f"• **Altura da cintura:** {row['altura_cintura']}")
+                    st.write(f"• **Cintura alta:** {row['cintura_alta']}")
+                    st.write(f"• **Cintura baixa:** {row['cintura_baixa']}")
 
                 with c_m2:
-                    st.write(f"🪡 **Altura do quadril:** {row['altura_quadril']}")
-                    st.write(f"🧵 **Quadril:** {row['quadril']}")
-                    st.write(f"👗 **Tamanho vestido:** {row['tamanho_vestido']}")
-                    st.write(f"🥻 **Tamanho saia:** {row['tamanho_saia']}")
-                    st.write(f"👔 **Tamanho blusa:** {row['tamanho_blusa']}")
-                    st.write(f"📏 **Tamanho manga:** {row['tamanho_manga']}")
-                    st.write(f"📐 **Largura manga:** {row['largura_manga']}")
-                    st.write(f"👔 **Colarinho:** {row['colarinho']}")
+                    st.write(f"• **Altura do quadril:** {row['altura_quadril']}")
+                    st.write(f"• **Quadril:** {row['quadril']}")
+                    st.write(f"• **Tamanho vestido:** {row['tamanho_vestido']}")
+                    st.write(f"• **Tamanho saia:** {row['tamanho_saia']}")
+                    st.write(f"• **Tamanho blusa:** {row['tamanho_blusa']}")
+                    st.write(f"• **Tamanho manga:** {row['tamanho_manga']}")
+                    st.write(f"• **Largura manga:** {row['largura_manga']}")
+                    st.write(f"• **Colarinho:** {row['colarinho']}")
 
                 if row['observacoes']:
-                    st.info(f"📝 **Observações:** {row['observacoes']}")
+                    st.markdown(f"**Obs:** {row['observacoes']}")
 
-                # --- MENSAGEM WHATSAPP ---
-                msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
-                msg += f"✂️ _Ateliê de Costura & Sob Medida_\n\n"
+                # Gerar mensagem tratada para WhatsApp
+                msg = f"*FICHA DE MEDIDAS - CAPRICHOS DA VÂNIA*\n"
                 msg += f"👤 *Cliente:* {row['nome']}\n"
-                if row['orcamento']:
-                    msg += f"💰 *Valor do Orçamento:* R$ {row['orcamento']}\n"
-                msg += f"📦 *Data da Entrega:* {row['data_entrega']}\n"
-                msg += f"🎉 *Data do Evento:* {row['data_evento']}\n\n"
-                msg += f"📐 *FICHA DE MEDIDAS:*\n"
+                msg += f"📦 *Data Entrega:* {row['data_entrega']}\n"
+                msg += f"🎉 *Data Evento:* {row['data_evento']}\n\n"
+                msg += f"*MEDIDAS:*\n"
                 
                 medidas_dict = {
-                    "📏 Ombro": row['ombro'], "📐 Cava frente": row['cava_frente'], "📐 Cava costas": row['cava_costas'],
-                    "🪡 Altura busto": row['altura_busto'], "👗 Busto": row['busto'], "↔️ Separação busto": row['separacao_busto'],
-                    "🪡 Altura cintura": row['altura_cintura'], "⏳ Cintura alta": row['cintura_alta'], "⏳ Cintura baixa": row['cintura_baixa'],
-                    "🪡 Altura quadril": row['altura_quadril'], "🧵 Quadril": row['quadril'], "👗 Tam. vestido": row['tamanho_vestido'],
-                    "🥻 Tam. saia": row['tamanho_saia'], "👔 Tam. blusa": row['tamanho_blusa'], "📏 Tam. manga": row['tamanho_manga'],
-                    "📐 Largura manga": row['largura_manga'], "👔 Colarinho": row['colarinho']
+                    "Ombro": row['ombro'], "Cava frente": row['cava_frente'], "Cava costas": row['cava_costas'],
+                    "Altura busto": row['altura_busto'], "Busto": row['busto'], "Separação busto": row['separacao_busto'],
+                    "Altura cintura": row['altura_cintura'], "Cintura alta": row['cintura_alta'], "Cintura baixa": row['cintura_baixa'],
+                    "Altura quadril": row['altura_quadril'], "Quadril": row['quadril'], "Tam. vestido": row['tamanho_vestido'],
+                    "Tam. saia": row['tamanho_saia'], "Tam. blusa": row['tamanho_blusa'], "Tam. manga": row['tamanho_manga'],
+                    "Largura manga": row['largura_manga'], "Colarinho": row['colarinho']
                 }
 
                 for chave, val in medidas_dict.items():
@@ -238,12 +184,10 @@ with tab2:
                         msg += f"• {chave}: {val}\n"
 
                 if row['observacoes']:
-                    msg += f"\n📝 *Observações / Detalhes:*\n_{row['observacoes']}_\n"
-                
-                msg += f"\nAgradecemos a confiança! Qualquer dúvida estamos à disposição. 💖"
+                    msg += f"\n*Obs:* {row['observacoes']}"
 
                 texto_url = urllib.parse.quote(msg)
                 num_tel = "".join(filter(str.isdigit, str(row['telefone'])))
                 link_wa = f"https://wa.me/55{num_tel}?text={texto_url}" if num_tel else f"https://wa.me/?text={texto_url}"
 
-                st.link_button("📲 Enviar Ficha Completa via WhatsApp", link_wa, use_container_width=True)
+                st.link_button("📲 Enviar Medidas via WhatsApp", link_wa, use_container_width=True)
