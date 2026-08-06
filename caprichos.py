@@ -1,261 +1,312 @@
-import sqlite3
-import urllib.parse
 import streamlit as st
+import sqlite3
+import pandas as pd
+from datetime import date
+import urllib.parse
 
-# --- CONFIGURAÇÃO DA PÁGINA ---
+# Configuração da página
 st.set_page_config(
-    page_title="Caprichos da Vânia",
-    page_icon="✂️",
-    layout="centered"
+    page_title="Caprichos da Vânia", 
+    page_icon="✂️", 
+    layout="centered",
+    initial_sidebar_state="expanded"
 )
 
-DB_NAME = "caprichos_vania.db"
+# --- ESTILIZAÇÃO FEMININA (CSS PERSONALIZADO) ---
+st.markdown("""
+    <style>
+    /* Estilo geral */
+    .stApp {
+        background-color: #FAFAFA;
+    }
+    
+    /* Títulos e Cabeçalhos */
+    h1, h2, h3 {
+        color: #7A3043 !important;
+        font-family: 'Helvetica Neue', sans-serif;
+    }
+    
+    .slogan {
+        text-align: center;
+        color: #A3586D;
+        font-size: 1.15rem;
+        font-weight: 500;
+        margin-top: -10px;
+        margin-bottom: 25px;
+    }
 
-# --- BANCO DE DADOS ---
+    /* Cartões Personalizados da Tela Inicial */
+    .card-feminino {
+        background-color: #FFF0F3;
+        border: 2px solid #F4C2C2;
+        border-radius: 15px 15px 0px 0px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 0px;
+    }
+    
+    .card-feminino h3 {
+        color: #8C3A52 !important;
+        margin-bottom: 8px;
+    }
+    
+    .card-feminino p {
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    /* Ajuste de Botões para tom Rosa Chá */
+    div.stButton > button {
+        background-color: #D87080 !important;
+        color: white !important;
+        border-radius: 0px 0px 15px 15px !important;
+        border: none !important;
+        font-weight: bold !important;
+        padding: 0.6rem 1rem !important;
+        transition: all 0.3s ease;
+    }
+
+    div.stButton > button:hover {
+        background-color: #B55262 !important;
+        box-shadow: 0 4px 10px rgba(181, 82, 98, 0.3);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- CONEXÃO BANCO DE DADOS ---
+def get_connection():
+    conn = sqlite3.connect('ateliervania.db', check_same_thread=False)
+    return conn
+
 def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    cursor.execute('''
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('''
         CREATE TABLE IF NOT EXISTS clientes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL, telefone TEXT, nascimento TEXT,
-            busto TEXT, torax TEXT, cintura TEXT, quadril TEXT, ombro TEXT,
-            alt_busto TEXT, seio_seio TEXT, comp_corpo TEXT, alt_quadril TEXT,
-            comp_saia TEXT, comp_calca TEXT, alt_gancho TEXT, larg_braco TEXT,
-            comp_manga TEXT, punho TEXT, obs TEXT
+            nome TEXT NOT NULL,
+            telefone TEXT,
+            data_entrega TEXT,
+            data_evento TEXT,
+            ombro TEXT,
+            cava_frente TEXT,
+            cava_costas TEXT,
+            altura_busto TEXT,
+            busto TEXT,
+            separacao_busto TEXT,
+            altura_cintura TEXT,
+            cintura_alta TEXT,
+            cintura_baixa TEXT,
+            altura_quadril TEXT,
+            quadril TEXT,
+            tamanho_vestido TEXT,
+            tamanho_saia TEXT,
+            tamanho_blusa TEXT,
+            tamanho_manga TEXT,
+            largura_manga TEXT,
+            colarinho TEXT,
+            observacoes TEXT
         )
     ''')
     conn.commit()
     conn.close()
 
-def salvar_cliente(dados):
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO clientes (
-            nome, telefone, nascimento, busto, torax, cintura, quadril, ombro,
-            alt_busto, seio_seio, comp_corpo, alt_quadril, comp_saia, comp_calca,
-            alt_gancho, larg_braco, comp_manga, punho, obs
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', dados)
-    conn.commit()
-    conn.close()
-
-def atualizar_cliente(cliente_id, dados):
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    cursor.execute('''
-        UPDATE clientes SET
-            nome=?, telefone=?, nascimento=?, busto=?, torax=?, cintura=?, quadril=?, ombro=?,
-            alt_busto=?, seio_seio=?, comp_corpo=?, alt_quadril=?, comp_saia=?, comp_calca=?,
-            alt_gancho=?, larg_braco=?, comp_manga=?, punho=?, obs=?
-        WHERE id=?
-    ''', (*dados, cliente_id))
-    conn.commit()
-    conn.close()
-
-def buscar_clientes():
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM clientes ORDER BY nome ASC")
-    dados = cursor.fetchall()
-    conn.close()
-    return dados
-
-def deletar_cliente(cliente_id):
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM clientes WHERE id = ?", (cliente_id,))
-    conn.commit()
-    conn.close()
-
-# --- LINK DO WHATSAPP ---
-def gerar_link_whatsapp(c):
-    (id_c, nome, tel, nasc, busto, torax, cint, quad, ombro, 
-     alt_b, seio, comp_c, alt_q, saia, calca, gancho, braco, manga, punho, obs) = c
-
-    msg = f"✂️ *FICHA DE MEDIDAS - CAPRICHOS DA VÂNIA*\n"
-    msg += f"----------------------------------------\n"
-    msg += f"👤 *Cliente:* {nome or '-'}\n"
-    if tel: msg += f"📞 *Tel:* {tel}\n"
-    if nasc: msg += f"🎂 *Nascimento:* {nasc}\n"
-
-    msg += f"\n📐 *MEDIDAS SUPERIORES (cm)*\n"
-    msg += f"• Busto: {busto or '-'} | Tórax: {torax or '-'}\n"
-    msg += f"• Cintura: {cint or '-'} | Ombro: {ombro or '-'}\n"
-    msg += f"• Alt. Busto: {alt_b or '-'} | Seio a Seio: {seio or '-'}\n"
-    msg += f"• Comp. Corpo: {comp_c or '-'}\n"
-
-    msg += f"\n📏 *MEDIDAS INFERIORES (cm)*\n"
-    msg += f"• Quadril: {quad or '-'} | Alt. Quadril: {alt_q or '-'}\n"
-    msg += f"• Comp. Saia/Vestido: {saia or '-'}\n"
-    msg += f"• Comp. Calça: {calca or '-'}\n"
-    msg += f"• Altura Gancho: {gancho or '-'}\n"
-
-    msg += f"\n🧵 *BRAÇO E MANGA (cm)*\n"
-    msg += f"• Largura Braço: {braco or '-'} | Comp. Manga: {manga or '-'}\n"
-    msg += f"• Punho: {punho or '-'}\n"
-
-    if obs:
-        msg += f"\n📝 *OBSERVAÇÕES*\n{obs}\n"
-
-    msg += f"\n_Ateliê Caprichos da Vânia_"
-
-    texto_encoded = urllib.parse.quote(msg)
-    
-    if tel:
-        num_limpo = "".join(filter(str.isdigit, tel))
-        if len(num_limpo) in (10, 11) and not num_limpo.startswith("55"):
-            num_limpo = "55" + num_limpo
-        return f"https://api.whatsapp.com/send?phone={num_limpo}&text={texto_encoded}"
-    
-    return f"https://api.whatsapp.com/send?text={texto_encoded}"
-
-# Inicializa Banco
 init_db()
 
-# Estado da sessão para guardar quem está sendo editado
-if 'cliente_em_edicao' not in st.session_state:
-    st.session_state.cliente_em_edicao = None
+# --- CONTROLE DE NAVEGAÇÃO ---
+if "menu_selecionado" not in st.session_state:
+    st.session_state["menu_selecionado"] = "🏠 Início"
 
-# --- CABEÇALHO ---
-st.markdown("<h1 style='text-align: center; color: #D81B60;'>✂️ CAPRICHOS DA VÂNIA</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-weight: bold; color: #555;'>Vania Leonardo • Designer de Moda</p>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-style: italic; color: #888;'>“Você sonha, nós realizamos!”</p>", unsafe_allow_html=True)
-st.divider()
+def ir_para_pagina(nome_pagina):
+    st.session_state["menu_selecionado"] = nome_pagina
 
-# AVISO DE EDIÇÃO (Aparece no topo para avisar o usuário)
-if st.session_state.cliente_em_edicao is not None:
-    st.warning(f"✏️ **Você está editando a cliente:** {st.session_state.cliente_em_edicao[1].upper()}. Vá para a primeira aba ('✨ Nova Ficha / Cadastro / Edição') para alterar os dados!")
-    if st.button("❌ Cancelar Edição"):
-        st.session_state.cliente_em_edicao = None
-        st.rerun()
+# Sidebar
+st.sidebar.title("🪡 Ateliê")
+st.sidebar.markdown("**Caprichos da Vânia**")
+st.sidebar.markdown("---")
 
-tab1, tab2 = st.tabs(["✨ Nova Ficha / Cadastro / Edição", "📋 Clientes Cadastradas"])
+menu = st.sidebar.radio(
+    "Navegação",
+    ["🏠 Início", "📝 Cadastrar Ficha", "🔍 Consultar Clientes"],
+    key="menu_selecionado"
+)
 
-# --- TAB 1: CADASTRO / EDIÇÃO ---
-with tab1:
-    c_edit = st.session_state.cliente_em_edicao
+# --- TELA 1: CAPA / INÍCIO ---
+if st.session_state["menu_selecionado"] == "🏠 Início":
+    st.markdown("<h1 style='text-align: center;'>🪡 Caprichos da Vânia</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='slogan'>Você Sonha, Nós Realizamos</p>", unsafe_allow_html=True)
+    st.markdown("---")
+    
+    st.markdown("""
+    ### 👋 Olá, Vânia! Seja bem-vinda.
+    Este é o seu sistema exclusivo para registrar e organizar as medidas de suas clientes com facilidade e elegância, Lembre-se Você é a melhor ARRAZA.
+    """)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    if c_edit:
-        st.subheader(f"✏️ Editando: {c_edit[1]}")
+    col_card1, col_card2 = st.columns(2)
+    
+    # Cartão 1: Nova Ficha
+    with col_card1:
+        st.markdown("""
+            <div class="card-feminino">
+                <h3>📝 Nova Ficha</h3>
+                <p>Cadastre uma nova cliente com todas as 17 medidas e datas do evento/entrega.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        st.button("✨ Abrir Nova Ficha", key="btn_nova_ficha", on_click=ir_para_pagina, args=("📝 Cadastrar Ficha",), use_container_width=True)
+    
+    # Cartão 2: Consultar
+    with col_card2:
+        st.markdown("""
+            <div class="card-feminino">
+                <h3>🔍 Consultar</h3>
+                <p>Busque fichas salvas, veja os detalhes e envie tudo formatado pelo WhatsApp.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        st.button("🌸 Consultar Clientes", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
+
+    st.markdown("<br><hr>", unsafe_allow_html=True)
+    st.caption("👈 Você também pode usar o menu na lateral esquerda para navegar!")
+
+# --- TELA 2: CADASTRO / EDIÇÃO ---
+elif st.session_state["menu_selecionado"] == "📝 Cadastrar Ficha":
+    st.title("📝 Cadastrar Nova Ficha")
+    
+    st.markdown("### Dados do Cliente")
+    nome = st.text_input("Nome do Cliente *")
+    telefone = st.text_input("Telefone (WhatsApp)")
+    
+    col_dt1, col_dt2 = st.columns(2)
+    with col_dt1:
+        data_entrega = st.date_input("Data da Entrega", value=date.today())
+    with col_dt2:
+        data_evento = st.date_input("Data do Evento", value=date.today())
+
+    st.markdown("---")
+    st.markdown("### 📏 Medidas Gerais")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        ombro = st.text_input("Ombro")
+        cava_frente = st.text_input("Cava frente")
+        cava_costas = st.text_input("Cava costas")
+        altura_busto = st.text_input("Altura do busto")
+        busto = st.text_input("Busto")
+        separacao_busto = st.text_input("Separação do busto")
+        altura_cintura = st.text_input("Altura da cintura")
+        cintura_alta = st.text_input("Cintura alta")
+        cintura_baixa = st.text_input("Cintura baixa")
+
+    with col2:
+        altura_quadril = st.text_input("Altura do quadril")
+        quadril = st.text_input("Quadril")
+        tamanho_vestido = st.text_input("Tamanho vestido")
+        tamanho_saia = st.text_input("Tamanho saia")
+        tamanho_blusa = st.text_input("Tamanho blusa")
+        tamanho_manga = st.text_input("Tamanho manga")
+        largura_manga = st.text_input("Largura manga")
+        colarinho = st.text_input("Colarinho")
+
+    st.markdown("---")
+    observacoes = st.text_area("Observações Gerais / Detalhes do Modelo")
+
+    if st.button("💾 Salvar Ficha de Medidas", type="primary", use_container_width=True):
+        if not nome.strip():
+            st.error("Por favor, preencha pelo menos o nome do cliente!")
+        else:
+            conn = get_connection()
+            c = conn.cursor()
+            c.execute('''
+                INSERT INTO clientes (
+                    nome, telefone, data_entrega, data_evento, ombro, cava_frente, cava_costas, 
+                    altura_busto, busto, separacao_busto, altura_cintura, cintura_alta, cintura_baixa, 
+                    altura_quadril, quadril, tamanho_vestido, tamanho_saia, tamanho_blusa, tamanho_manga, 
+                    largura_manga, colarinho, observacoes
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                nome, telefone, data_entrega.strftime("%d/%m/%Y"), data_evento.strftime("%d/%m/%Y"), 
+                ombro, cava_frente, cava_costas, altura_busto, busto, separacao_busto, 
+                altura_cintura, cintura_alta, cintura_baixa, altura_quadril, quadril, 
+                tamanho_vestido, tamanho_saia, tamanho_blusa, tamanho_manga, largura_manga, 
+                colarinho, observacoes
+            ))
+            conn.commit()
+            conn.close()
+            st.success(f"Ficha de **{nome}** salva com sucesso!")
+
+# --- TELA 3: CONSULTA E WHATSAPP ---
+elif st.session_state["menu_selecionado"] == "🔍 Consultar Clientes":
+    st.title("🔍 Consultar Clientes")
+    
+    conn = get_connection()
+    df = pd.read_sql_query("SELECT * FROM clientes ORDER BY id DESC", conn)
+    conn.close()
+
+    if df.empty:
+        st.info("Nenhum cliente cadastrado ainda.")
     else:
-        st.subheader("📝 Nova Ficha de Medidas")
+        busca = st.text_input("🔎 Filtrar por Nome")
+        if busca:
+            df = df[df['nome'].str.contains(busca, case=False, na=False)]
 
-    # Usamos uma chave dinâmica no formulário para forçar a atualização dos valores ao clicar em Editar
-    form_key = f"form_cliente_{c_edit[0]}" if c_edit else "form_cliente_novo"
-
-    with st.form(key=form_key):
-        st.markdown("### 👤 Dados Principais")
-        col1, col2 = st.columns(2)
-        nome = col1.text_input("Nome Completo *", value=c_edit[1] if c_edit else "")
-        tel = col2.text_input("WhatsApp / Telefone (com DDD)", value=c_edit[2] if c_edit else "")
-        nasc = st.text_input("Data de Nascimento (DD/MM)", value=c_edit[3] if c_edit else "")
-
-        st.markdown("### 📐 Medidas Superiores (cm)")
-        col_s1, col_s2 = st.columns(2)
-        busto = col_s1.text_input("Busto", value=c_edit[4] if c_edit else "")
-        torax = col_s2.text_input("Tórax", value=c_edit[5] if c_edit else "")
-        cintura = col_s1.text_input("Cintura", value=c_edit[6] if c_edit else "")
-        ombro = col_s2.text_input("Ombro a Ombro", value=c_edit[8] if c_edit else "")
-        alt_busto = col_s1.text_input("Altura do Busto", value=c_edit[9] if c_edit else "")
-        seio_seio = col_s2.text_input("Seio a Seio", value=c_edit[10] if c_edit else "")
-        comp_corpo = st.text_input("Comprimento do Corpo", value=c_edit[11] if c_edit else "")
-
-        st.markdown("### 📏 Medidas Inferiores (cm)")
-        col_i1, col_i2 = st.columns(2)
-        quadril = col_i1.text_input("Quadril", value=c_edit[7] if c_edit else "")
-        alt_quadril = col_i2.text_input("Altura do Quadril", value=c_edit[12] if c_edit else "")
-        comp_saia = col_i1.text_input("Comprimento Saia/Vestido", value=c_edit[13] if c_edit else "")
-        comp_calca = col_i2.text_input("Comprimento Calça", value=c_edit[14] if c_edit else "")
-        alt_gancho = st.text_input("Altura Gancho/Gavião", value=c_edit[15] if c_edit else "")
-
-        st.markdown("### 🧵 Braço e Manga (cm)")
-        col_b1, col_b2 = st.columns(2)
-        larg_braco = col_b1.text_input("Largura do Braço", value=c_edit[16] if c_edit else "")
-        comp_manga = col_b2.text_input("Comprimento da Manga", value=c_edit[17] if c_edit else "")
-        punho = st.text_input("Punho", value=c_edit[18] if c_edit else "")
-
-        st.markdown("### 📝 Observações")
-        obs = st.text_area("Ajustes, tecidos, preferências...", value=c_edit[19] if c_edit else "")
-
-        texto_btn = "💾 Salvar Alterações no Banco de Dados" if c_edit else "💾 Salvar Cliente no Banco de Dados"
-        submit = st.form_submit_button(texto_btn, use_container_width=True)
-
-        if submit:
-            if not nome.strip():
-                st.error("⚠️ O campo Nome Completo é obrigatório!")
-            else:
-                dados = (
-                    nome.strip(), tel.strip(), nasc.strip(), busto.strip(), torax.strip(),
-                    cintura.strip(), quadril.strip(), ombro.strip(), alt_busto.strip(),
-                    seio_seio.strip(), comp_corpo.strip(), alt_quadril.strip(), comp_saia.strip(),
-                    comp_calca.strip(), alt_gancho.strip(), larg_braco.strip(), comp_manga.strip(),
-                    punho.strip(), obs.strip()
-                )
+        for _, row in df.iterrows():
+            with st.expander(f"👤 {row['nome']} | 📦 Entrega: {row['data_entrega']}"):
+                st.markdown(f"**Telefone:** {row['telefone']}")
+                st.markdown(f"🗓️ **Data da Entrega:** {row['data_entrega']} | 🎉 **Data do Evento:** {row['data_evento']}")
+                st.markdown("---")
                 
-                if c_edit:
-                    atualizar_cliente(c_edit[0], dados)
-                    st.success(f"✅ Ficha de **{nome}** atualizada!")
-                    st.session_state.cliente_em_edicao = None
-                    st.rerun()
-                else:
-                    salvar_cliente(dados)
-                    st.success(f"✅ Ficha de **{nome}** salva com sucesso!")
+                c_m1, c_m2 = st.columns(2)
+                with c_m1:
+                    st.write(f"• **Ombro:** {row['ombro']}")
+                    st.write(f"• **Cava frente:** {row['cava_frente']}")
+                    st.write(f"• **Cava costas:** {row['cava_costas']}")
+                    st.write(f"• **Altura do busto:** {row['altura_busto']}")
+                    st.write(f"• **Busto:** {row['busto']}")
+                    st.write(f"• **Separação do busto:** {row['separacao_busto']}")
+                    st.write(f"• **Altura da cintura:** {row['altura_cintura']}")
+                    st.write(f"• **Cintura alta:** {row['cintura_alta']}")
+                    st.write(f"• **Cintura baixa:** {row['cintura_baixa']}")
 
-# --- TAB 2: CONSULTA / LISTA ---
-with tab2:
-    st.subheader("📋 Lista de Clientes")
-    clientes = buscar_clientes()
+                with c_m2:
+                    st.write(f"• **Altura do quadril:** {row['altura_quadril']}")
+                    st.write(f"• **Quadril:** {row['quadril']}")
+                    st.write(f"• **Tamanho vestido:** {row['tamanho_vestido']}")
+                    st.write(f"• **Tamanho saia:** {row['tamanho_saia']}")
+                    st.write(f"• **Tamanho blusa:** {row['tamanho_blusa']}")
+                    st.write(f"• **Tamanho manga:** {row['tamanho_manga']}")
+                    st.write(f"• **Largura manga:** {row['largura_manga']}")
+                    st.write(f"• **Colarinho:** {row['colarinho']}")
 
-    if not clientes:
-        st.info("Nenhuma cliente cadastrada ainda.")
-    else:
-        busca = st.text_input("🔍 Buscar por nome", "")
-        clientes_filtrados = [c for c in clientes if busca.lower() in c[1].lower()]
+                if row['observacoes']:
+                    st.markdown(f"**Obs:** {row['observacoes']}")
 
-        for c in clientes_filtrados:
-            with st.expander(f"👤 **{c[1].upper()}**"):
-                st.write(f"📞 **WhatsApp:** {c[2] or 'Não informado'}")
-                st.write(f"🎂 **Nascimento:** {c[3] or 'Não informado'}")
+                # Gerar mensagem tratada para WhatsApp
+                msg = f"*FICHA DE MEDIDAS - CAPRICHOS DA VÂNIA*\n"
+                msg += f"👤 *Cliente:* {row['nome']}\n"
+                msg += f"📦 *Data Entrega:* {row['data_entrega']}\n"
+                msg += f"🎉 *Data Evento:* {row['data_evento']}\n\n"
+                msg += f"*MEDIDAS:*\n"
                 
-                col_det1, col_det2 = st.columns(2)
-                with col_det1:
-                    st.markdown("**📐 Superiores:**")
-                    st.write(f"• Busto: {c[4] or '-'} | Tórax: {c[5] or '-'}")
-                    st.write(f"• Cintura: {c[6] or '-'} | Ombro: {c[8] or '-'}")
-                    st.write(f"• Alt. Busto: {c[9] or '-'} | Seio: {c[10] or '-'}")
-                    st.write(f"• Comp. Corpo: {c[11] or '-'}")
+                medidas_dict = {
+                    "Ombro": row['ombro'], "Cava frente": row['cava_frente'], "Cava costas": row['cava_costas'],
+                    "Altura busto": row['altura_busto'], "Busto": row['busto'], "Separação busto": row['separacao_busto'],
+                    "Altura cintura": row['altura_cintura'], "Cintura alta": row['cintura_alta'], "Cintura baixa": row['cintura_baixa'],
+                    "Altura quadril": row['altura_quadril'], "Quadril": row['quadril'], "Tam. vestido": row['tamanho_vestido'],
+                    "Tam. saia": row['tamanho_saia'], "Tam. blusa": row['tamanho_blusa'], "Tam. manga": row['tamanho_manga'],
+                    "Largura manga": row['largura_manga'], "Colarinho": row['colarinho']
+                }
 
-                    st.markdown("**🧵 Braço / Manga:**")
-                    st.write(f"• Larg. Braço: {c[16] or '-'} | Manga: {c[17] or '-'}")
-                    st.write(f"• Punho: {c[18] or '-'}")
+                for chave, val in medidas_dict.items():
+                    if val and str(val).strip():
+                        msg += f"• {chave}: {val}\n"
 
-                with col_det2:
-                    st.markdown("**📏 Inferiores:**")
-                    st.write(f"• Quadril: {c[7] or '-'} | Alt. Quadril: {c[12] or '-'}")
-                    st.write(f"• Comp. Saia: {c[13] or '-'}")
-                    st.write(f"• Comp. Calça: {c[14] or '-'}")
-                    st.write(f"• Alt. Gancho: {c[15] or '-'}")
+                if row['observacoes']:
+                    msg += f"\n*Obs:* {row['observacoes']}"
 
-                    st.markdown("**📝 Observações:**")
-                    st.write(c[19] or "Nenhuma observação.")
+                texto_url = urllib.parse.quote(msg)
+                num_tel = "".join(filter(str.isdigit, str(row['telefone'])))
+                link_wa = f"https://wa.me/55{num_tel}?text={texto_url}" if num_tel else f"https://wa.me/?text={texto_url}"
 
-                st.divider()
-
-                link_wp = gerar_link_whatsapp(c)
-                st.link_button("📲 Enviar Ficha no WhatsApp", link_wp, use_container_width=True)
-
-                col_btn1, col_btn2 = st.columns(2)
-                
-                # Botão Editar
-                if col_btn1.button("✏️ Editar Cliente", key=f"btn_edit_{c[0]}", use_container_width=True):
-                    st.session_state.cliente_em_edicao = c
-                    st.rerun()
-
-                # Botão Excluir
-                if col_btn2.button("🗑️ Excluir Cliente", key=f"btn_del_{c[0]}", use_container_width=True):
-                    deletar_cliente(c[0])
-                    st.toast(f"Cliente {c[1]} excluída!")
-                    st.rerun()
+                st.link_button("📲 Enviar Medidas via WhatsApp", link_wa, use_container_width=True)
