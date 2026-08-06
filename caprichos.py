@@ -7,136 +7,162 @@ import urllib.parse
 # Configuração da página
 st.set_page_config(page_title="Caprichos da Vânia - Vania Leonardo", page_icon="✂️", layout="wide")
 
-# --- ESTILIZAÇÃO CUSTOMIZADA PARA MOBILE E DESKTOP (CSS) ---
+# --- DESIGN SOFISTICADO & ROSA ELEGANTE (CSS) ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
+    /* Limpeza de margens do Streamlit */
     .block-container {
-        padding-top: 1rem !important;
-        padding-bottom: 1rem !important;
+        padding-top: 1.2rem !important;
+        padding-bottom: 1.5rem !important;
         padding-left: 0.8rem !important;
         padding-right: 0.8rem !important;
     }
 
+    /* Fundo Rose Suave de Alta Classe */
     html, body, [class*="css"] {
-        font-family: 'Poppins', sans-serif;
-        background-color: #fdfbf7;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #faf4f5;
+        color: #2c1820;
     }
 
-    /* Cabeçalho Ateliê */
-    .atelier-header {
+    /* CABEÇALHO DO ATELIÊ */
+    .header-box {
         text-align: center;
-        margin-bottom: 15px;
+        padding: 5px 0 12px 0;
     }
-    .atelier-title {
-        font-family: 'Playfair Display', serif;
-        color: #a0435d;
-        font-size: 1.7rem;
-        font-weight: 600;
+    .header-title {
+        font-family: 'Cormorant Garamond', serif;
+        color: #8c2b4e;
+        font-size: 2.1rem !important;
+        font-weight: 700;
         margin: 0;
         line-height: 1.1;
+        letter-spacing: -0.5px;
     }
-    .atelier-subtitle {
-        color: #8c7366;
-        font-size: 0.8rem;
-        margin: 3px 0 2px 0;
-        font-weight: 500;
+    .header-subtitle {
+        color: #613346;
+        font-size: 0.82rem !important;
+        font-weight: 600;
+        margin: 4px 0 2px 0;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
     }
-    .atelier-slogan {
-        font-family: 'Playfair Display', serif;
+    .header-slogan {
+        font-family: 'Cormorant Garamond', serif;
         font-style: italic;
-        color: #b0526e;
-        font-size: 0.85rem;
-        margin: 0;
+        color: #ad3b66;
+        font-size: 1rem !important;
+        margin: 2px 0 0 0;
+        font-weight: 600;
     }
 
-    /* CONTAINER FLEXBOX - FORÇA LADO A LADO NO CELULAR */
-    .flex-grid {
+    /* FORÇAR COLUNAS LADO A LADO NO CELULAR SEM QUEBRAR */
+    [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: space-between !important;
         gap: 10px !important;
-        width: 100% !important;
-        margin-bottom: 12px !important;
     }
 
-    .flex-card {
-        flex: 1 !important;
-        background: #ffffff;
-        border: 1px solid #f7dce2;
-        border-radius: 12px;
+    [data-testid="column"] {
+        width: 50% !important;
+        flex: 1 1 50% !important;
+        min-width: 0 !important;
+    }
+
+    /* CARDS DE MÉTRICAS - ROSA CHIC */
+    .metric-card {
+        background: linear-gradient(145deg, #ffffff, #fff0f3);
+        border: 1px solid #eab8c4;
+        border-radius: 14px;
         padding: 10px 8px;
         text-align: center;
-        box-shadow: 0px 2px 8px rgba(176, 82, 110, 0.04);
+        box-shadow: 0px 4px 12px rgba(140, 43, 78, 0.06);
     }
-
-    .card-label {
-        color: #8c7366;
-        font-size: 0.75rem;
-        font-weight: 500;
+    .metric-label {
+        color: #613346;
+        font-size: 0.78rem;
+        font-weight: 700;
         margin-bottom: 2px;
     }
-
-    .card-value {
-        color: #a0435d;
-        font-size: 1.4rem;
-        font-weight: 600;
+    .metric-value {
+        color: #8c2b4e;
+        font-size: 1.6rem;
+        font-weight: 700;
         line-height: 1;
     }
 
-    .nav-card {
-        flex: 1 !important;
-        background: linear-gradient(135deg, #ffffff 0%, #fff7f9 100%);
-        border: 1px solid #f2d2d8;
-        border-radius: 14px;
-        padding: 12px 10px;
+    /* SUBTÍTULO EM DESTAQUE */
+    .section-banner {
         text-align: center;
-        box-shadow: 0px 3px 10px rgba(160, 67, 93, 0.05);
+        color: #8c2b4e;
+        font-weight: 700;
+        font-size: 0.92rem;
+        margin: 14px 0 10px 0;
     }
 
-    .nav-title {
-        color: #a0435d;
-        font-size: 0.88rem;
-        font-weight: 600;
-        margin-bottom: 3px;
+    /* CARDS DE NAVEGAÇÃO */
+    .nav-card-title {
+        color: #8c2b4e;
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+        text-align: center;
     }
-
-    .nav-desc {
-        color: #776660;
-        font-size: 0.7rem;
+    .nav-card-desc {
+        color: #4a2835; /* Texto escuro bem legível */
+        font-size: 0.75rem;
+        font-weight: 500;
         margin-bottom: 10px;
-        line-height: 1.2;
+        line-height: 1.25;
+        text-align: center;
     }
 
-    /* Botões Customizados */
+    /* ESTILIZAÇÃO DOS BOTÕES */
     .stButton > button {
-        border-radius: 20px !important;
-        font-weight: 500 !important;
-        font-size: 0.8rem !important;
-        padding: 4px 8px !important;
-        min-height: 36px !important;
+        background: linear-gradient(135deg, #a8325c 0%, #8c2b4e 100%) !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 22px !important;
+        font-weight: 600 !important;
+        font-size: 0.82rem !important;
+        padding: 6px 12px !important;
+        min-height: 38px !important;
+        box-shadow: 0px 3px 8px rgba(140, 43, 78, 0.25) !important;
+        transition: all 0.2s ease;
     }
-    
-    .stButton > button[kind="primary"] {
-        background-color: #a0435d !important;
-        border-color: #a0435d !important;
-        color: white !important;
+
+    .stButton > button:active {
+        transform: scale(0.97);
+    }
+
+    /* CAMPOS DE TEXTO / INPUTS MAIS CLAROS E ELEGANTES */
+    .stTextInput input, .stTextArea textarea, .stDateInput input {
+        border-radius: 10px !important;
+        border: 1px solid #e2a8b6 !important;
+        color: #2c1820 !important;
+        font-weight: 500 !important;
+    }
+
+    .stTextInput label, .stTextArea label, .stDateInput label {
+        color: #613346 !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
     }
 
     hr {
         border: 0;
         height: 1px;
-        background: #f2d2d8;
-        margin: 12px 0 !important;
+        background: linear-gradient(90deg, transparent, #eab8c4, transparent);
+        margin: 14px 0 !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- CONEXÃO BANCO DE DADOS ---
+# --- BANCO DE DADOS ---
 def get_connection():
-    conn = sqlite3.connect('ateliervania.db', check_same_thread=False)
-    return conn
+    return sqlite3.connect('ateliervania.db', check_same_thread=False)
 
 def init_db():
     conn = get_connection()
@@ -180,20 +206,20 @@ if 'pagina' not in st.session_state:
 
 # --- MENU LATERAL (SIDEBAR) ---
 with st.sidebar:
-    st.markdown("<h2 style='text-align: center; color: #a0435d; margin-bottom: 0;'>✂️ Vania Leonardo</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #8c7366; font-size: 0.85rem; margin-top: 0;'><b>Designer de Moda</b></p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.8rem; margin-bottom: 0;'>✂️ Vania Leonardo</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #613346; font-size: 0.8rem; font-weight: 600; margin-top: 0;'>DESIGNER DE MODA</p>", unsafe_allow_html=True)
     st.markdown("---")
     
-    opcoes_menu = ["🌸 Início / Capa", "📝 Cadastrar Cliente", "🔍 Consultar Fichas & WhatsApp"]
+    opcoes_menu = ["🌸 Início / Capa", "📝 Nova Medida", "🔍 Consultar Medidas & WhatsApp"]
     index_atual = opcoes_menu.index(st.session_state.pagina) if st.session_state.pagina in opcoes_menu else 0
     
-    escolha = st.radio("✨ **Navegação**", opcoes_menu, index=index_atual)
+    escolha = st.radio("✨ **Menu Principal**", opcoes_menu, index=index_atual)
     st.session_state.pagina = escolha
     
     st.markdown("---")
     st.markdown("""
-        <div style='background-color: #fff0f3; padding: 10px; border-radius: 8px; border: 1px solid #fce4e9; text-align: center;'>
-            <p style='margin:0; color: #a0435d; font-size: 0.8rem;'>✨ <i>"Você sonha, nós Realizamos!"</i></p>
+        <div style='background: #fff0f3; padding: 10px; border-radius: 10px; border: 1px solid #f2c2cd; text-align: center;'>
+            <p style='margin:0; color: #8c2b4e; font-size: 0.8rem; font-weight: 600;'>✨ <i>"Você sonha, nós Realizamos!"</i></p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -201,12 +227,12 @@ with st.sidebar:
 # 🌸 TELA 1: CAPA (INÍCIO)
 # ==============================================================================
 if st.session_state.pagina == "🌸 Início / Capa":
-    # Cabeçalho Elegante
+    # Cabeçalho Principal
     st.markdown("""
-        <div class="atelier-header">
-            <h1 class="atelier-title">✂️ Caprichos da Vânia</h1>
-            <p class="atelier-subtitle">Vania Leonardo | Designer de Moda</p>
-            <p class="atelier-slogan">"Quando ama o que se faz, se faz com capricho. 🥰"</p>
+        <div class="header-box">
+            <h1 class="header-title">✂️ Caprichos da Vânia</h1>
+            <p class="header-subtitle">Vania Leonardo | Designer de Moda</p>
+            <p class="header-slogan">"Quando ama o que se faz, se faz com capricho. 🥰"</p>
         </div>
     """, unsafe_allow_html=True)
     
@@ -216,55 +242,55 @@ if st.session_state.pagina == "🌸 Início / Capa":
     conn.close()
     qtd = len(df_total)
 
-    # METRICAS LADO A LADO NATIVAS EM HTML/CSS
-    st.html(f"""
-        <div class="flex-grid">
-            <div class="flex-card">
-                <div class="card-label">👥 Clientes</div>
-                <div class="card-value">{qtd}</div>
+    # 1. MÉTRICAS LADO A LADO
+    col_m1, col_m2 = st.columns(2)
+    with col_m1:
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-label">👥 Clientes</div>
+                <div class="metric-value">{qtd}</div>
             </div>
-            <div class="flex-card">
-                <div class="card-label">🪡 Fichas Salvas</div>
-                <div class="card-value">{qtd}</div>
-            </div>
-        </div>
-    """)
+        """, unsafe_allow_html=True)
 
-    st.markdown("<p style='color: #a0435d; text-align: center; font-weight: 600; font-size: 0.9rem; margin: 5px 0;'>✨ Você sonha, nós Realizamos!</p>", unsafe_allow_html=True)
-
-    # BLOCOS DE AÇÃO LADO A LADO
-    st.html("""
-        <div class="flex-grid">
-            <div class="nav-card">
-                <div class="nav-title">📝 Nova Ficha</div>
-                <div class="nav-desc">Cadastre dados e 17 medidas.</div>
+    with col_m2:
+        st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-label">🪡 Medidas Salvas</div>
+                <div class="metric-value">{qtd}</div>
             </div>
-            <div class="nav-card">
-                <div class="nav-title">🔍 Consultar</div>
-                <div class="nav-desc">Busque e envie pelo Whats.</div>
-            </div>
-        </div>
-    """)
+        """, unsafe_allow_html=True)
 
-    # BOTÕES DE NAVEGAÇÃO CORRESPONDENTES
-    btn_col1, btn_col2 = st.columns(2)
-    with btn_col1:
-        if st.button("✨ Cadastrar", type="primary", use_container_width=True):
-            st.session_state.pagina = "📝 Cadastrar Cliente"
+    st.markdown("<p class='section-banner'>✨ Você sonha, nós Realizamos!</p>", unsafe_allow_html=True)
+
+    # 2. CARDS LADO A LADO COM OS BOTÕES DENTRO
+    col_c1, col_c2 = st.columns(2)
+
+    with col_c1:
+        st.markdown("""
+            <div class="nav-card-title">📝 Nova Medida</div>
+            <div class="nav-card-desc">Cadastre dados e 17 medidas completas.</div>
+        """, unsafe_allow_html=True)
+        if st.button("✨ Cadastrar", key="btn_cad", use_container_width=True):
+            st.session_state.pagina = "📝 Nova Medida"
             st.rerun()
-    with btn_col2:
-        if st.button("📲 Consultar", type="primary", use_container_width=True):
-            st.session_state.pagina = "🔍 Consultar Fichas & WhatsApp"
+
+    with col_c2:
+        st.markdown("""
+            <div class="nav-card-title">🔍 Consultar</div>
+            <div class="nav-card-desc">Busque medidas e envie pelo WhatsApp.</div>
+        """, unsafe_allow_html=True)
+        if st.button("📲 Consultar", key="btn_cons", use_container_width=True):
+            st.session_state.pagina = "🔍 Consultar Medidas & WhatsApp"
             st.rerun()
 
 # ==============================================================================
-# 📝 TELA 2: CADASTRAR CLIENTE
+# 📝 TELA 2: NOVA MEDIDA
 # ==============================================================================
-elif st.session_state.pagina == "📝 Cadastrar Cliente":
-    st.markdown("<h2 style='color: #a0435d; font-size: 1.25rem; margin-bottom: 0;'>📝 Cadastrar Ficha de Medidas</h2>", unsafe_allow_html=True)
+elif st.session_state.pagina == "📝 Nova Medida":
+    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.6rem; margin-bottom: 0;'>📝 Cadastrar Nova Medida</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
-    st.markdown("<h4 style='color: #a0435d; font-size: 0.95rem; margin-bottom: 5px;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.95rem; margin-bottom: 8px;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
     nome = st.text_input("Nome da Cliente *")
     
     col_t1, col_t2 = st.columns(2)
@@ -275,12 +301,12 @@ elif st.session_state.pagina == "📝 Cadastrar Cliente":
     
     col_dt1, col_dt2 = st.columns(2)
     with col_dt1:
-        data_entrega = st.date_input("📦 Entrega", value=date.today())
+        data_entrega = st.date_input("📦 Data Entrega", value=date.today())
     with col_dt2:
-        data_evento = st.date_input("🎉 Evento", value=date.today())
+        data_evento = st.date_input("🎉 Data Evento", value=date.today())
 
     st.markdown("---")
-    st.markdown("<h4 style='color: #a0435d; font-size: 0.95rem; margin-bottom: 5px;'>📏 Medidas (cm)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.95rem; margin-bottom: 8px;'>📏 Medidas (cm)</h4>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
@@ -305,11 +331,11 @@ elif st.session_state.pagina == "📝 Cadastrar Cliente":
         colarinho = st.text_input("👔 Colarinho")
 
     st.markdown("---")
-    observacoes = st.text_area("📝 Observações / Modelo")
+    observacoes = st.text_area("📝 Observações / Detalhes do Modelo")
 
-    if st.button("💖 Salvar Ficha no Ateliê", type="primary", use_container_width=True):
+    if st.button("💖 Salvar Medidas no Ateliê", use_container_width=True):
         if not nome.strip():
-            st.error("Informe o nome da cliente!")
+            st.error("Por favor, preencha o nome da cliente!")
         else:
             conn = get_connection()
             c = conn.cursor()
@@ -329,13 +355,13 @@ elif st.session_state.pagina == "📝 Cadastrar Cliente":
             ))
             conn.commit()
             conn.close()
-            st.success(f"🎉 Ficha de **{nome}** salva com sucesso!")
+            st.success(f"🎉 Medidas de **{nome}** salvas com sucesso!")
 
 # ==============================================================================
-# 🔍 TELA 3: CONSULTAR FICHAS & WHATSAPP
+# 🔍 TELA 3: CONSULTAR MEDIDAS & WHATSAPP
 # ==============================================================================
-elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
-    st.markdown("<h2 style='color: #a0435d; font-size: 1.25rem; margin-bottom: 0;'>🔍 Consultar Fichas & WhatsApp</h2>", unsafe_allow_html=True)
+elif st.session_state.pagina == "🔍 Consultar Medidas & WhatsApp":
+    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.6rem; margin-bottom: 0;'>🔍 Consultar Medidas & WhatsApp</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
     conn = get_connection()
@@ -343,9 +369,9 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
     conn.close()
 
     if df.empty:
-        st.info("Nenhuma cliente cadastrada.")
+        st.info("Nenhuma cliente cadastrada no momento.")
     else:
-        busca = st.text_input("🔎 Buscar por nome")
+        busca = st.text_input("🔎 Buscar por nome da cliente")
         if busca:
             df = df[df['nome'].str.contains(busca, case=False, na=False)]
 
@@ -391,7 +417,7 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
                     msg += f"💰 *Valor do Orçamento:* R$ {row['orcamento']}\n"
                 msg += f"📦 *Data da Entrega:* {row['data_entrega']}\n"
                 msg += f"🎉 *Data do Evento:* {row['data_evento']}\n\n"
-                msg += f"📐 *FICHA DE MEDIDAS:*\n"
+                msg += f"📐 *TABELA DE MEDIDAS:*\n"
                 
                 medidas_dict = {
                     "📏 Ombro": row['ombro'], "📐 Cava frente": row['cava_frente'], "📐 Cava costas": row['cava_costas'],
