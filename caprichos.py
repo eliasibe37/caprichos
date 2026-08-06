@@ -1,7 +1,7 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
-from datetime import date
+from datetime import date, datetime
 import urllib.parse
 
 # Configuração da página
@@ -25,7 +25,7 @@ st.markdown("""
         padding-bottom: 1rem !important;
         padding-left: 0.8rem !important;
         padding-right: 0.8rem !important;
-        max-width: 480px !important; /* Limita a largura do container principal */
+        max-width: 480px !important;
         margin: 0 auto !important;
     }
 
@@ -64,7 +64,7 @@ st.markdown("""
         text-align: center;
     }
 
-    /* GRID FLEXBOX FIXO (Garante 2 colunas proporcionais lado a lado) */
+    /* GRID FLEXBOX FIXO */
     .grid-menu {
         display: flex !important;
         flex-direction: row !important;
@@ -74,10 +74,10 @@ st.markdown("""
         box-sizing: border-box !important;
     }
 
-    /* CARD INTEGRADO (BALÃO + BOTÃO NUMA COISA SÓ) */
+    /* CARD INTEGRADO (BALÃO + BOTÃO) */
     .card-opcao {
         flex: 1 1 50% !important;
-        max-width: 200px !important; /* EVITA QUE O BALÃO FIQUE ESTICADO */
+        max-width: 200px !important;
         background-color: #FFF0F3;
         border: 1px solid #F4C2C2;
         border-radius: 10px;
@@ -175,6 +175,19 @@ def init_db():
     conn.commit()
     conn.close()
 
+def deletar_cliente(cliente_id):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("DELETE FROM clientes WHERE id = ?", (cliente_id,))
+    conn.commit()
+    conn.close()
+
+def converter_data(data_str):
+    try:
+        return datetime.strptime(data_str, "%d/%m/%Y").date()
+    except:
+        return date.today()
+
 init_db()
 
 # --- CONTROLE DE NAVEGAÇÃO VIA URL PARAMS ---
@@ -218,13 +231,12 @@ if pagina_atual == "inicio":
     <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # ESTRUTURA UNIFICADA EM HTML (Garante formato de cartão perfeito e sem esticar)
     st.markdown("""
     <div class="grid-menu">
         <div class="card-opcao">
             <div class="card-corpo">
                 <h3>📝 Nova Medida</h3>
-                <p>Cadastre medidas.</p>
+                <p>Cadastre 17 medidas.</p>
             </div>
             <a href="?p=cadastrar" target="_self" class="btn-card">✨ Cadastrar</a>
         </div>
@@ -313,7 +325,7 @@ elif pagina_atual == "cadastrar":
             conn.close()
             st.success(f"Ficha de **{nome}** salva com sucesso!")
 
-# --- TELA 3: CONSULTA E WHATSAPP ---
+# --- TELA 3: CONSULTA, EDIÇÃO, EXCLUSÃO E WHATSAPP ---
 elif pagina_atual == "consultar":
     st.title("🔍 Consultar Clientes")
     
@@ -329,89 +341,194 @@ elif pagina_atual == "consultar":
             df = df[df['nome'].str.contains(busca, case=False, na=False)]
 
         for _, row in df.iterrows():
+            cliente_id = row['id']
             valor_orcamento = f"R$ {row['orcamento']}" if row.get('orcamento') else "A combinar"
             
             with st.expander(f"👤 {row['nome']} | 📦 Entrega: {row['data_entrega']}"):
-                st.markdown(f"📱 **Telefone:** {row['telefone']} | 💰 **Orçamento:** {valor_orcamento}")
-                st.markdown(f"📦 **Data da Entrega:** {row['data_entrega']} | 🎉 **Data do Evento:** {row['data_evento']}")
-                st.markdown("---")
                 
-                c_m1, c_m2 = st.columns(2)
-                with c_m1:
-                    st.write(f"📐 **Ombro:** {row['ombro']}")
-                    st.write(f"✂️ **Cava frente:** {row['cava_frente']}")
-                    st.write(f"✂️ **Cava costas:** {row['cava_costas']}")
-                    st.write(f"📏 **Altura do busto:** {row['altura_busto']}")
-                    st.write(f"💖 **Busto:** {row['busto']}")
-                    st.write(f"↔️ **Separação do busto:** {row['separacao_busto']}")
-                    st.write(f"📏 **Altura da cintura:** {row['altura_cintura']}")
-                    st.write(f"🎀 **Cintura alta:** {row['cintura_alta']}")
-                    st.write(f"🎀 **Cintura baixa:** {row['cintura_baixa']}")
+                # --- VERIFICA SE ESTÁ EM MODO DE EDIÇÃO PARA ESTE CLIENTE ---
+                if st.session_state.get(f"editando_{cliente_id}", False):
+                    st.markdown("### ✏️ Editar Ficha de Medidas")
+                    
+                    edit_nome = st.text_input("👤 Nome", value=row['nome'], key=f"e_nome_{cliente_id}")
+                    
+                    c_e1, c_e2 = st.columns(2)
+                    with c_e1:
+                        edit_tel = st.text_input("📱 Telefone", value=row['telefone'] or "", key=f"e_tel_{cliente_id}")
+                    with c_e2:
+                        edit_orc = st.text_input("💰 Orçamento (R$)", value=row['orcamento'] or "", key=f"e_orc_{cliente_id}")
+                        
+                    c_ed1, c_ed2 = st.columns(2)
+                    with c_ed1:
+                        edit_dt_ent = st.date_input("📦 Data Entrega", value=converter_data(row['data_entrega']), key=f"e_dt_ent_{cliente_id}")
+                    with c_ed2:
+                        edit_dt_eve = st.date_input("🎉 Data Evento", value=converter_data(row['data_evento']), key=f"e_dt_eve_{cliente_id}")
 
-                with c_m2:
-                    st.write(f"📏 **Altura do quadril:** {row['altura_quadril']}")
-                    st.write(f"✨ **Quadril:** {row['quadril']}")
-                    st.write(f"👗 **Tamanho vestido:** {row['tamanho_vestido']}")
-                    st.write(f"👗 **Tamanho saia:** {row['tamanho_saia']}")
-                    st.write(f"👚 **Tamanho blusa:** {row['tamanho_blusa']}")
-                    st.write(f"🧵 **Tamanho manga:** {row['tamanho_manga']}")
-                    st.write(f"🧵 **Largura manga:** {row['largura_manga']}")
-                    st.write(f"👔 **Colarinho:** {row['colarinho']}")
+                    st.markdown("---")
+                    ce1, ce2 = st.columns(2)
+                    with ce1:
+                        edit_ombro = st.text_input("📐 Ombro", value=row['ombro'] or "", key=f"e_omb_{cliente_id}")
+                        edit_cf = st.text_input("✂️ Cava frente", value=row['cava_frente'] or "", key=f"e_cf_{cliente_id}")
+                        edit_cc = st.text_input("✂️ Cava costas", value=row['cava_costas'] or "", key=f"e_cc_{cliente_id}")
+                        edit_ab = st.text_input("📏 Altura busto", value=row['altura_busto'] or "", key=f"e_ab_{cliente_id}")
+                        edit_busto = st.text_input("💖 Busto", value=row['busto'] or "", key=f"e_bus_{cliente_id}")
+                        edit_sb = st.text_input("↔️ Separação busto", value=row['separacao_busto'] or "", key=f"e_sb_{cliente_id}")
+                        edit_ac = st.text_input("📏 Altura cintura", value=row['altura_cintura'] or "", key=f"e_ac_{cliente_id}")
+                        edit_ca = st.text_input("🎀 Cintura alta", value=row['cintura_alta'] or "", key=f"e_ca_{cliente_id}")
+                        edit_cb = st.text_input("🎀 Cintura baixa", value=row['cintura_baixa'] or "", key=f"e_cb_{cliente_id}")
 
-                if row['observacoes']:
-                    st.markdown(f"📝 **Obs:** {row['observacoes']}")
+                    with ce2:
+                        edit_aq = st.text_input("📏 Altura quadril", value=row['altura_quadril'] or "", key=f"e_aq_{cliente_id}")
+                        edit_quadril = st.text_input("✨ Quadril", value=row['quadril'] or "", key=f"e_qua_{cliente_id}")
+                        edit_tv = st.text_input("👗 Tam. vestido", value=row['tamanho_vestido'] or "", key=f"e_tv_{cliente_id}")
+                        edit_ts = st.text_input("👗 Tam. saia", value=row['tamanho_saia'] or "", key=f"e_ts_{cliente_id}")
+                        edit_tbl = st.text_input("👚 Tam. blusa", value=row['tamanho_blusa'] or "", key=f"e_tbl_{cliente_id}")
+                        edit_tm = st.text_input("🧵 Tam. manga", value=row['tamanho_manga'] or "", key=f"e_tm_{cliente_id}")
+                        edit_lm = st.text_input("🧵 Largura manga", value=row['largura_manga'] or "", key=f"e_lm_{cliente_id}")
+                        edit_col = st.text_input("👔 Colarinho", value=row['colarinho'] or "", key=f"e_col_{cliente_id}")
 
-                # 🌸 MENSAGEM INTERATIVA & FORMATADA PARA WHATSAPP 🌸
-                msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
-                msg += f"👗 _Vania Leonardo | Designer de Moda_\n"
-                msg += f"💖 _\"Você Sonha, Nós Realizamos\"_\n"
-                msg += f"──────────────────────\n\n"
-                
-                msg += f"👤 *Cliente:* {row['nome']}\n"
-                if row.get('orcamento'):
-                    msg += f"💰 *Orçamento:* R$ {row['orcamento']}\n"
-                msg += f"📦 *Data de Entrega:* {row['data_entrega']}\n"
-                msg += f"🎉 *Data do Evento:* {row['data_evento']}\n\n"
-                
-                msg += f"📏 *TABELA DE MEDIDAS (cm):*\n"
-                
-                medidas_dict = {
-                    "📐 Ombro": row['ombro'],
-                    "✂️ Cava frente": row['cava_frente'],
-                    "✂️ Cava costas": row['cava_costas'],
-                    "📏 Altura busto": row['altura_busto'],
-                    "💖 Busto": row['busto'],
-                    "↔️ Separação busto": row['separacao_busto'],
-                    "📏 Altura cintura": row['altura_cintura'],
-                    "🎀 Cintura alta": row['cintura_alta'],
-                    "🎀 Cintura baixa": row['cintura_baixa'],
-                    "📏 Altura quadril": row['altura_quadril'],
-                    "✨ Quadril": row['quadril'],
-                    "👗 Tam. vestido": row['tamanho_vestido'],
-                    "👗 Tam. saia": row['tamanho_saia'],
-                    "👚 Tam. blusa": row['tamanho_blusa'],
-                    "🧵 Tam. manga": row['tamanho_manga'],
-                    "🧵 Largura manga": row['largura_manga'],
-                    "👔 Colarinho": row['colarinho']
-                }
+                    edit_obs = st.text_area("📝 Observações", value=row['observacoes'] or "", key=f"e_obs_{cliente_id}")
 
-                tem_medidas = False
-                for chave, val in medidas_dict.items():
-                    if val and str(val).strip():
-                        msg += f"  {chave}: {val}\n"
-                        tem_medidas = True
+                    btn_salvar, btn_cancelar = st.columns(2)
+                    with btn_salvar:
+                        if st.button("💾 Salvar Alterações", key=f"btn_salvar_{cliente_id}", type="primary", use_container_width=True):
+                            conn = get_connection()
+                            c = conn.cursor()
+                            c.execute('''
+                                UPDATE clientes SET
+                                    nome=?, telefone=?, data_entrega=?, data_evento=?, orcamento=?,
+                                    ombro=?, cava_frente=?, cava_costas=?, altura_busto=?, busto=?,
+                                    separacao_busto=?, altura_cintura=?, cintura_alta=?, cintura_baixa=?,
+                                    altura_quadril=?, quadril=?, tamanho_vestido=?, tamanho_saia=?,
+                                    tamanho_blusa=?, tamanho_manga=?, largura_manga=?, colarinho=?, observacoes=?
+                                WHERE id=?
+                            ''', (
+                                edit_nome, edit_tel, edit_dt_ent.strftime("%d/%m/%Y"), edit_dt_eve.strftime("%d/%m/%Y"), edit_orc,
+                                edit_ombro, edit_cf, edit_cc, edit_ab, edit_busto, edit_sb, edit_ac, edit_ca, edit_cb,
+                                edit_aq, edit_quadril, edit_tv, edit_ts, edit_tbl, edit_tm, edit_lm, edit_col, edit_obs,
+                                cliente_id
+                            ))
+                            conn.commit()
+                            conn.close()
+                            st.session_state[f"editando_{cliente_id}"] = False
+                            st.success("Ficha atualizada!")
+                            st.rerun()
 
-                if not tem_medidas:
-                    msg += f"  ▫️ _Ainda não preenchidas_\n"
+                    with btn_cancelar:
+                        if st.button("❌ Cancelar", key=f"btn_canc_{cliente_id}", use_container_width=True):
+                            st.session_state[f"editando_{cliente_id}"] = False
+                            st.rerun()
 
-                if row['observacoes']:
-                    msg += f"\n📝 *Detalhes & Observações:*\n_{row['observacoes']}_\n"
+                # --- EXIBIÇÃO NORMAL DA FICHA ---
+                else:
+                    st.markdown(f"📱 **Telefone:** {row['telefone']} | 💰 **Orçamento:** {valor_orcamento}")
+                    st.markdown(f"📦 **Data da Entrega:** {row['data_entrega']} | 🎉 **Data do Evento:** {row['data_evento']}")
+                    st.markdown("---")
+                    
+                    c_m1, c_m2 = st.columns(2)
+                    with c_m1:
+                        st.write(f"📐 **Ombro:** {row['ombro']}")
+                        st.write(f"✂️ **Cava frente:** {row['cava_frente']}")
+                        st.write(f"✂️ **Cava costas:** {row['cava_costas']}")
+                        st.write(f"📏 **Altura do busto:** {row['altura_busto']}")
+                        st.write(f"💖 **Busto:** {row['busto']}")
+                        st.write(f"↔️ **Separação do busto:** {row['separacao_busto']}")
+                        st.write(f"📏 **Altura da cintura:** {row['altura_cintura']}")
+                        st.write(f"🎀 **Cintura alta:** {row['cintura_alta']}")
+                        st.write(f"🎀 **Cintura baixa:** {row['cintura_baixa']}")
 
-                msg += f"\n──────────────────────\n"
-                msg += f"🥰 _Quando ama o que se faz, se faz com capricho!_"
+                    with c_m2:
+                        st.write(f"📏 **Altura do quadril:** {row['altura_quadril']}")
+                        st.write(f"✨ **Quadril:** {row['quadril']}")
+                        st.write(f"👗 **Tamanho vestido:** {row['tamanho_vestido']}")
+                        st.write(f"👗 **Tamanho saia:** {row['tamanho_saia']}")
+                        st.write(f"👚 **Tamanho blusa:** {row['tamanho_blusa']}")
+                        st.write(f"🧵 **Tamanho manga:** {row['tamanho_manga']}")
+                        st.write(f"🧵 **Largura manga:** {row['largura_manga']}")
+                        st.write(f"👔 **Colarinho:** {row['colarinho']}")
 
-                texto_url = urllib.parse.quote(msg)
-                num_tel = "".join(filter(str.isdigit, str(row['telefone'])))
-                link_wa = f"https://wa.me/55{num_tel}?text={texto_url}" if num_tel else f"https://wa.me/?text={texto_url}"
+                    if row['observacoes']:
+                        st.markdown(f"📝 **Obs:** {row['observacoes']}")
 
-                st.link_button("📲 Enviar Medidas via WhatsApp", link_wa, use_container_width=True)
+                    # 🌸 MENSAGEM WHATSAPP 🌸
+                    msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
+                    msg += f"👗 _Vania Leonardo | Designer de Moda_\n"
+                    msg += f"💖 _\"Você Sonha, Nós Realizamos\"_\n"
+                    msg += f"──────────────────────\n\n"
+                    
+                    msg += f"👤 *Cliente:* {row['nome']}\n"
+                    if row.get('orcamento'):
+                        msg += f"💰 *Orçamento:* R$ {row['orcamento']}\n"
+                    msg += f"📦 *Data de Entrega:* {row['data_entrega']}\n"
+                    msg += f"🎉 *Data do Evento:* {row['data_evento']}\n\n"
+                    
+                    msg += f"📏 *TABELA DE MEDIDAS (cm):*\n"
+                    
+                    medidas_dict = {
+                        "📐 Ombro": row['ombro'],
+                        "✂️ Cava frente": row['cava_frente'],
+                        "✂️ Cava costas": row['cava_costas'],
+                        "📏 Altura busto": row['altura_busto'],
+                        "💖 Busto": row['busto'],
+                        "↔️ Separação busto": row['separacao_busto'],
+                        "📏 Altura cintura": row['altura_cintura'],
+                        "🎀 Cintura alta": row['cintura_alta'],
+                        "🎀 Cintura baixa": row['cintura_baixa'],
+                        "📏 Altura quadril": row['altura_quadril'],
+                        "✨ Quadril": row['quadril'],
+                        "👗 Tam. vestido": row['tamanho_vestido'],
+                        "👗 Tam. saia": row['tamanho_saia'],
+                        "👚 Tam. blusa": row['tamanho_blusa'],
+                        "🧵 Tam. manga": row['tamanho_manga'],
+                        "🧵 Largura manga": row['largura_manga'],
+                        "👔 Colarinho": row['colarinho']
+                    }
+
+                    tem_medidas = False
+                    for chave, val in medidas_dict.items():
+                        if val and str(val).strip():
+                            msg += f"  {chave}: {val}\n"
+                            tem_medidas = True
+
+                    if not tem_medidas:
+                        msg += f"  ▫️ _Ainda não preenchidas_\n"
+
+                    if row['observacoes']:
+                        msg += f"\n📝 *Detalhes & Observações:*\n_{row['observacoes']}_\n"
+
+                    msg += f"\n──────────────────────\n"
+                    msg += f"🥰 _Quando ama o que se faz, se faz com capricho!_"
+
+                    texto_url = urllib.parse.quote(msg)
+                    num_tel = "".join(filter(str.isdigit, str(row['telefone'])))
+                    link_wa = f"https://wa.me/55{num_tel}?text={texto_url}" if num_tel else f"https://wa.me/?text={texto_url}"
+
+                    st.link_button("📲 Enviar Medidas via WhatsApp", link_wa, use_container_width=True)
+
+                    # --- BOTÕES DE AÇÃO: EDITAR E EXCLUIR ---
+                    st.markdown("<div style='margin-top: 8px;'></div>", unsafe_allow_html=True)
+                    col_btn_edit, col_btn_del = st.columns(2)
+                    
+                    with col_btn_edit:
+                        if st.button("✏️ Editar", key=f"btn_edit_trigger_{cliente_id}", use_container_width=True):
+                            st.session_state[f"editando_{cliente_id}"] = True
+                            st.rerun()
+
+                    with col_btn_del:
+                        if st.button("🗑️ Excluir", key=f"btn_del_trigger_{cliente_id}", use_container_width=True):
+                            st.session_state[f"confirmar_del_{cliente_id}"] = True
+
+                    # Confirmação de exclusão
+                    if st.session_state.get(f"confirmar_del_{cliente_id}", False):
+                        st.warning(f"⚠️ Tem certeza que deseja excluir **{row['nome']}**?")
+                        c_conf1, c_conf2 = st.columns(2)
+                        with c_conf1:
+                            if st.button("✔️ Sim, Excluir", key=f"sim_del_{cliente_id}", type="primary", use_container_width=True):
+                                deletar_cliente(cliente_id)
+                                st.session_state[f"confirmar_del_{cliente_id}"] = False
+                                st.success("Cliente excluído com sucesso!")
+                                st.rerun()
+                        with c_conf2:
+                            if st.button("❌ Não", key=f"nao_del_{cliente_id}", use_container_width=True):
+                                st.session_state[f"confirmar_del_{cliente_id}"] = False
+                                st.rerun()
