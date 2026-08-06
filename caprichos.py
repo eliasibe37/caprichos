@@ -28,19 +28,19 @@ st.markdown("""
         padding-right: 0.5rem !important;
     }
 
-    /* LARGURA REDUZIDA DO MENU LATERAL (SIDEBAR) */
+    /* MENU LATERAL LARGURA ORIGINAL */
     [data-testid="stSidebar"] {
-        width: 230px !important;
-        max-width: 60vw !important;
+        width: 280px !important;
     }
 
-    /* COLUNAS LADO A LADO COMPACTAS */
+    /* ENCOLHER O BLOCO DOS BALÕES NA HORIZONTAL (MAIS ESTREITOS) */
     [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
-        gap: 6px !important;
-        width: 100% !important;
+        gap: 8px !important;
+        max-width: 80% !important; /* Limita a largura horizontal dos dois balões juntos */
+        margin: 0 auto !important; /* Centraliza o bloco na tela */
     }
 
     [data-testid="column"] {
@@ -71,53 +71,47 @@ st.markdown("""
     }
 
     .boas-vindas {
-        font-size: 0.75rem !important;
+        font-size: 0.78rem !important;
         color: #444;
-        margin-bottom: 10px !important;
+        margin-bottom: 12px !important;
         line-height: 1.2 !important;
         text-align: center;
     }
 
-    /* BALÕES ~40% MENORES */
+    /* BALÕES ENCOLHIDOS NA HORIZONTAL E VERTICAL */
     .card-feminino-box {
         background-color: #FFF0F3;
         border: 1px solid #F4C2C2;
         border-radius: 8px 8px 0px 0px;
-        padding: 4px 2px;
+        padding: 4px 4px;
         text-align: center;
         box-sizing: border-box;
-        min-height: 42px;
+        min-height: 28px !important;
         display: flex;
-        flex-direction: column;
+        align-items: center;
         justify-content: center;
     }
 
     .card-feminino-box h3 {
         color: #8C3A52 !important;
-        font-size: 0.7rem !important;
-        margin-bottom: 1px !important;
-        margin-top: 0px !important;
-        font-weight: bold;
-    }
-
-    .card-feminino-box p {
-        color: #666;
-        font-size: 0.55rem !important;
-        line-height: 1.0 !important;
+        font-size: 0.72rem !important;
         margin: 0 !important;
+        font-weight: bold;
+        line-height: 1.1 !important;
     }
 
-    /* BOTÕES DOS BALÕES ~40% MENORES */
+    /* BOTÕES DOS BALÕES ESTREITOS */
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
-        border-radius: 0px 0px 6px 6px !important;
+        border-radius: 0px 0px 8px 8px !important;
         border: none !important;
         font-weight: bold !important;
-        font-size: 0.65rem !important;
+        font-size: 0.68rem !important;
         padding: 0.15rem 0.1rem !important;
         width: 100% !important;
-        min-height: 26px !important;
+        min-height: 24px !important;
+        height: 28px !important;
         line-height: 1 !important;
         transition: all 0.3s ease;
     }
@@ -182,7 +176,7 @@ if "menu_selecionado" not in st.session_state:
 def ir_para_pagina(nome_pagina):
     st.session_state["menu_selecionado"] = nome_pagina
 
-# Sidebar Compacta
+# Sidebar
 st.sidebar.title("🪡 Ateliê")
 st.sidebar.markdown("**Caprichos da Vânia**")
 st.sidebar.markdown("---")
@@ -202,14 +196,13 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # COLUNAS LADO A LADO REDUZIDAS
+    # COLUNAS LADO A LADO REDUZIDAS NA HORIZONTAL
     c1, c2 = st.columns(2)
     
     with c1:
         st.markdown("""
             <div class="card-feminino-box">
                 <h3>📝 Nova Medida</h3>
-                <p>17 medidas e prazos</p>
             </div>
         """, unsafe_allow_html=True)
         st.button("✨ Cadastrar", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
@@ -218,12 +211,11 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
         st.markdown("""
             <div class="card-feminino-box">
                 <h3>🔍 Consultar</h3>
-                <p>Busca e WhatsApp</p>
             </div>
         """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
-    st.markdown("<hr style='margin-top:10px; margin-bottom:6px;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin-top:14px; margin-bottom:6px;'>", unsafe_allow_html=True)
     st.caption("👈 Abra o menu lateral no canto superior para navegar.")
 
 # --- TELA 2: CADASTRO / EDIÇÃO ---
