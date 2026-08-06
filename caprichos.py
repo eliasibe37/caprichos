@@ -4,15 +4,15 @@ import pandas as pd
 from datetime import date
 import urllib.parse
 
-# Configuração da página
+# Configuração da página (inicia com menu recolhido no celular)
 st.set_page_config(
     page_title="Caprichos da Vânia", 
     page_icon="✂️", 
     layout="centered",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# --- ESTILIZAÇÃO FEMININA (CSS PERSONALIZADO) ---
+# --- ESTILIZAÇÃO FEMININA (CSS PERSONALIZADO + AJUSTE MOBILE) ---
 st.markdown("""
     <style>
     /* Estilo geral */
@@ -20,6 +20,13 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
+    /* AJUSTE DA LARGURA DA BARRA LATERAL (SIDEBAR) NO CELULAR */
+    [data-testid="stSidebar"] {
+        width: 270px !important;
+        max-width: 75vw !important;
+        background-color: #FFF5F7 !important;
+    }
+
     /* Títulos e Cabeçalhos */
     h1, h2, h3 {
         color: #7A3043 !important;
@@ -167,7 +174,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
         st.button("🌸 Consultar Clientes", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
     st.markdown("<br><hr>", unsafe_allow_html=True)
-    st.caption("👈 Você também pode usar o menu na lateral esquerda para navegar!")
+    st.caption("👈 Você também pode usar as três listrinhas no canto superior esquerdo para navegar!")
 
 # --- TELA 2: CADASTRO / EDIÇÃO ---
 elif st.session_state["menu_selecionado"] == "📝 Cadastrar Ficha":
