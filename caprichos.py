@@ -3,6 +3,16 @@ import sqlite3
 import pandas as pd
 from datetime import date
 import urllib.parse
+import locale
+
+# Configura o idioma do Python para Português do Brasil (para o calendário)
+try:
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+except Exception:
+    try:
+        locale.setlocale(locale.LC_ALL, 'pt_BR')
+    except Exception:
+        pass
 
 # Configuração da página
 st.set_page_config(
