@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILIZAÇÃO COMPACTA E ALINHAMENTO LADO A LADO ---
+# --- ESTILIZAÇÃO FIXA E CENTRALIZADA ---
 st.markdown("""
     <style>
     /* Estilo geral */
@@ -20,12 +20,13 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
-    /* Margens laterais ajustadas */
     .block-container {
-        padding-top: 2.8rem !important;
+        padding-top: 2.5rem !important;
         padding-bottom: 1rem !important;
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
+        max-width: 480px !important; /* Limita a largura do container principal */
+        margin: 0 auto !important;
     }
 
     /* Menu lateral estreito */
@@ -63,67 +64,68 @@ st.markdown("""
         text-align: center;
     }
 
-    /* FORÇAR AS DUAS COLUNAS DO STREAMLIT A FICAREM LADO A LADO NO MOBILE */
-    [data-testid="stHorizontalBlock"] {
+    /* GRID FLEXBOX FIXO (Garante 2 colunas proporcionais lado a lado) */
+    .grid-menu {
         display: flex !important;
         flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        gap: 6px !important;
+        justify-content: center !important;
+        gap: 10px !important;
         width: 100% !important;
+        box-sizing: border-box !important;
     }
 
-    [data-testid="column"] {
-        width: 50% !important;
+    /* CARD INTEGRADO (BALÃO + BOTÃO NUMA COISA SÓ) */
+    .card-opcao {
         flex: 1 1 50% !important;
-        min-width: 0px !important;
-    }
-
-    /* CARD/BALÃO PARTE SUPERIOR */
-    .card-balao {
+        max-width: 200px !important; /* EVITA QUE O BALÃO FIQUE ESTICADO */
         background-color: #FFF0F3;
         border: 1px solid #F4C2C2;
-        border-bottom: none;
-        border-radius: 8px 8px 0px 0px;
-        padding: 8px 2px;
+        border-radius: 10px;
+        overflow: hidden;
         text-align: center;
-        box-sizing: border-box;
-        min-height: 58px;
+        box-shadow: 0px 2px 4px rgba(0,0,0,0.04);
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-between;
     }
 
-    .card-balao h3 {
+    .card-corpo {
+        padding: 10px 6px;
+    }
+
+    .card-opcao h3 {
         color: #8C3A52 !important;
-        font-size: 0.75rem !important;
-        margin-bottom: 2px !important;
+        font-size: 0.8rem !important;
+        margin-bottom: 3px !important;
         margin-top: 0px !important;
         font-weight: bold;
-        white-space: nowrap;
     }
 
-    .card-balao p {
+    .card-opcao p {
         color: #666;
-        font-size: 0.58rem !important;
+        font-size: 0.62rem !important;
         line-height: 1.1 !important;
         margin: 0 !important;
     }
 
-    /* BOTÕES AJUSTADOS INTEGRADOS LOGO ABAIXO DO BALÃO DA SUA COLUNA */
-    div.stButton > button {
+    /* BOTÃO INTEGRADO DENTRO DO CARD */
+    .btn-card {
+        display: block !important;
         background-color: #D87080 !important;
         color: white !important;
-        border-radius: 0px 0px 8px 8px !important;
-        border: none !important;
+        text-decoration: none !important;
         font-weight: bold !important;
-        font-size: 0.7rem !important;
-        padding: 0.25rem 0.1rem !important;
+        font-size: 0.72rem !important;
+        padding: 6px 0px !important;
+        border: none !important;
         width: 100% !important;
-        margin-top: 0px !important;
+        text-align: center !important;
+        transition: 0.2s;
     }
 
-    div.stButton > button:hover {
+    .btn-card:hover {
         background-color: #B55262 !important;
+        color: white !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -175,26 +177,40 @@ def init_db():
 
 init_db()
 
-# --- CONTROLE DE NAVEGAÇÃO ---
-if "menu_selecionado" not in st.session_state:
-    st.session_state["menu_selecionado"] = "🏠 Início"
-
-def ir_para_pagina(nome_pagina):
-    st.session_state["menu_selecionado"] = nome_pagina
+# --- CONTROLE DE NAVEGAÇÃO VIA URL PARAMS ---
+query_params = st.query_params
+pagina_atual = query_params.get("p", "inicio")
 
 # Sidebar Compacta
 st.sidebar.title("🪡 Ateliê")
 st.sidebar.markdown("**Caprichos da Vânia**")
 st.sidebar.markdown("---")
 
-menu = st.sidebar.radio(
+opcoes_menu = {
+    "🏠 Início": "inicio",
+    "📝 Cadastrar Nova Medida": "cadastrar",
+    "🔍 Consultar Clientes": "consultar"
+}
+
+# Sincroniza sidebar
+idx_sel = 0
+if pagina_atual == "cadastrar":
+    idx_sel = 1
+elif pagina_atual == "consultar":
+    idx_sel = 2
+
+menu_sb = st.sidebar.radio(
     "Navegação",
-    ["🏠 Início", "📝 Cadastrar Nova Medida", "🔍 Consultar Clientes"],
-    key="menu_selecionado"
+    list(opcoes_menu.keys()),
+    index=idx_sel
 )
 
+if opcoes_menu[menu_sb] != pagina_atual:
+    st.query_params["p"] = opcoes_menu[menu_sb]
+    st.rerun()
+
 # --- TELA 1: CAPA / INÍCIO ---
-if st.session_state["menu_selecionado"] == "🏠 Início":
+if pagina_atual == "inicio":
     st.markdown("<div class='titulo-principal'>🪡 Caprichos da Vânia</div>", unsafe_allow_html=True)
     st.markdown("<div class='slogan'>Você Sonha, Nós Realizamos</div>", unsafe_allow_html=True)
     
@@ -202,32 +218,31 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # COLUNAS LADO A LADO COM O BALÃO E BOTÃO RESPECTIVO DENTRO DE CADA UMA
-    c1, c2 = st.columns(2)
-    
-    with c1:
-        st.markdown("""
-            <div class="card-balao">
+    # ESTRUTURA UNIFICADA EM HTML (Garante formato de cartão perfeito e sem esticar)
+    st.markdown("""
+    <div class="grid-menu">
+        <div class="card-opcao">
+            <div class="card-corpo">
                 <h3>📝 Nova Medida</h3>
                 <p>Cadastre 17 medidas.</p>
             </div>
-        """, unsafe_allow_html=True)
-        st.button("✨ Cadastrar", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
-
-    with c2:
-        st.markdown("""
-            <div class="card-balao">
+            <a href="?p=cadastrar" target="_self" class="btn-card">✨ Cadastrar</a>
+        </div>
+        <div class="card-opcao">
+            <div class="card-corpo">
                 <h3>🔍 Consultar</h3>
                 <p>Envie no WhatsApp.</p>
             </div>
-        """, unsafe_allow_html=True)
-        st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
+            <a href="?p=consultar" target="_self" class="btn-card">🌸 Consultar</a>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("<hr style='margin-top:14px; margin-bottom:8px;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin-top:20px; margin-bottom:8px;'>", unsafe_allow_html=True)
     st.caption("👈 Abra o menu lateral no canto superior para navegar.")
 
 # --- TELA 2: CADASTRO / EDIÇÃO ---
-elif st.session_state["menu_selecionado"] == "📝 Cadastrar Nova Medida":
+elif pagina_atual == "cadastrar":
     st.title("📝 Cadastrar Nova Medida")
     
     st.markdown("### 👤 Dados do Cliente")
@@ -299,7 +314,7 @@ elif st.session_state["menu_selecionado"] == "📝 Cadastrar Nova Medida":
             st.success(f"Ficha de **{nome}** salva com sucesso!")
 
 # --- TELA 3: CONSULTA E WHATSAPP ---
-elif st.session_state["menu_selecionado"] == "🔍 Consultar Clientes":
+elif pagina_atual == "consultar":
     st.title("🔍 Consultar Clientes")
     
     conn = get_connection()
