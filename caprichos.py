@@ -5,7 +5,25 @@ from datetime import date
 import urllib.parse
 
 # Configuração da página
-st.set_page_config(page_title="Caprichos da Vânia", page_icon="✂️", layout="centered")
+st.set_page_config(page_title="Caprichos da Vânia", page_icon="✂️", layout="wide")
+
+# Estilização CSS personalizada para os cartões
+st.markdown("""
+    <style>
+    .metric-card {
+        background-color: #f0f2f6;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid #ff4b4b;
+        margin-bottom: 10px;
+    }
+    .main-header {
+        text-align: center;
+        padding: 10px;
+        color: #ff4b4b;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # --- CONEXÃO BANCO DE DADOS ---
 def get_connection():
@@ -48,31 +66,49 @@ def init_db():
 
 init_db()
 
-# --- CABEÇALHO ---
-st.title("✂️ Caprichos da Vânia")
-st.subheader("Ficha de Medidas e Atendimento")
+# --- CABEÇALHO PRINCIPAL ---
+st.markdown("<h1 class='main-header'>✂️ Ateliê Caprichos da Vânia</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Gestão de Clientes, Agendamentos & Ficha de Medidas</p>", unsafe_allow_html=True)
+st.markdown("---")
 
-tab1, tab2 = st.tabs(["📝 Cadastrar / Editar Cliente", "🔍 Consultar Clientes"])
+# --- PAINEL DE CARTÕES (MÉTRICAS RÁPIDAS) ---
+conn = get_connection()
+df_total = pd.read_sql_query("SELECT * FROM clientes", conn)
+conn.close()
 
-# --- ABA 1: CADASTRO / EDIÇÃO ---
+col_m1, col_m2, col_m3 = st.columns(3)
+with col_m1:
+    st.metric(label="👥 Clientes Cadastrados", value=len(df_total))
+with col_m2:
+    st.metric(label="✂️ Atendimentos Ativos", value=len(df_total))
+with col_m3:
+    st.metric(label="✨ Status do Sistema", value="Online 🟢")
+
+st.markdown("---")
+
+# --- ABAS PRINCIPAIS ---
+tab1, tab2 = st.tabs(["📝 Nova Ficha / Cadastrar Cliente", "🔍 Consultar Fichas & WhatsApp"])
+
+# --- ABA 1: CADASTRO ---
 with tab1:
-    st.markdown("### 👤 Dados Gerais do Cliente")
-    nome = st.text_input("Nome do Cliente *")
+    st.markdown("### 👤 Dados do Cliente & Prazos")
     
-    col_t1, col_t2 = st.columns(2)
-    with col_t1:
+    col_a, col_b, col_c = st.columns([2, 1, 1])
+    with col_a:
+        nome = st.text_input("Nome do Cliente *")
+    with col_b:
         telefone = st.text_input("Telefone (WhatsApp)")
-    with col_t2:
+    with col_c:
         orcamento = st.text_input("Valor do Orçamento (R$)", placeholder="Ex: 250,00")
-    
+
     col_dt1, col_dt2 = st.columns(2)
     with col_dt1:
-        data_entrega = st.date_input("Data da Entrega", value=date.today())
+        data_entrega = st.date_input("📦 Data da Entrega", value=date.today())
     with col_dt2:
-        data_evento = st.date_input("Data do Evento", value=date.today())
+        data_evento = st.date_input("🎉 Data do Evento", value=date.today())
 
     st.markdown("---")
-    st.markdown("### 📏 Lista de Medidas")
+    st.markdown("### 📏 Ficha Geral de Medidas")
     
     col1, col2 = st.columns(2)
     
@@ -98,9 +134,9 @@ with tab1:
         colarinho = st.text_input("👔 Colarinho")
 
     st.markdown("---")
-    observacoes = st.text_area("📝 Observações Gerais / Detalhes do Modelo")
+    observacoes = st.text_area("📝 Observações do Modelo / Detalhes do Pedido")
 
-    if st.button("💾 Salvar Ficha", type="primary", use_container_width=True):
+    if st.button("💾 Salvar Ficha do Cliente", type="primary", use_container_width=True):
         if not nome.strip():
             st.error("Por favor, preencha pelo menos o nome do cliente!")
         else:
@@ -122,29 +158,36 @@ with tab1:
             ))
             conn.commit()
             conn.close()
-            st.success(f"Ficha de **{nome}** salva com sucesso!")
+            st.success(f"🎉 Ficha de **{nome}** cadastrada com sucesso!")
+            st.rerun()
 
-# --- ABA 2: CONSULTA E ENVIO PARA WHATSAPP ---
+# --- ABA 2: CONSULTA & ENVIO ---
 with tab2:
-    st.markdown("### 🔎 Buscar Fichas Salvas")
+    st.markdown("### 🔎 Buscar e Gerenciar Fichas")
     conn = get_connection()
     df = pd.read_sql_query("SELECT * FROM clientes ORDER BY id DESC", conn)
     conn.close()
 
     if df.empty:
-        st.info("Nenhum cliente cadastrado ainda.")
+        st.info("Nenhum cliente cadastrado ainda. Utilize a aba acima para cadastrar!")
     else:
-        busca = st.text_input("Filtrar por Nome")
+        busca = st.text_input("🔍 Digite o nome para filtrar")
         if busca:
             df = df[df['nome'].str.contains(busca, case=False, na=False)]
 
         for _, row in df.iterrows():
             valor_orc = f"R$ {row['orcamento']}" if row['orcamento'] else "Não informado"
-            with st.expander(f"👤 {row['nome']} | 📦 Entrega: {row['data_entrega']} | 💰 {valor_orc}"):
-                st.markdown(f"**📱 Telefone:** {row['telefone']}")
-                st.markdown(f"💰 **Orçamento Acordado:** {valor_orc}")
-                st.markdown(f"🗓️ **Data da Entrega:** {row['data_entrega']} | 🎉 **Data do Evento:** {row['data_evento']}")
-                st.markdown("---")
+            
+            # Cartão de exibição por cliente
+            with st.expander(f"👤 {row['nome']} | 📦 Entrega: {row['data_entrega']} | 💰 Orçamento: {valor_orc}"):
+                
+                st.markdown(f"""
+                <div class='metric-card'>
+                    <h4>👤 <b>{row['nome']}</b></h4>
+                    <p><b>📱 Telefone:</b> {row['telefone']} | <b>💰 Orçamento:</b> {valor_orc}</p>
+                    <p><b>📦 Data da Entrega:</b> {row['data_entrega']} | <b>🎉 Data do Evento:</b> {row['data_evento']}</p>
+                </div>
+                """, unsafe_allow_html=True)
                 
                 c_m1, c_m2 = st.columns(2)
                 with c_m1:
@@ -169,9 +212,9 @@ with tab2:
                     st.write(f"👔 **Colarinho:** {row['colarinho']}")
 
                 if row['observacoes']:
-                    st.markdown(f"📝 **Obs:** {row['observacoes']}")
+                    st.info(f"📝 **Observações:** {row['observacoes']}")
 
-                # --- MONTAGEM DA MENSAGEM DO WHATSAPP (COM ÍCONES) ---
+                # --- MENSAGEM WHATSAPP ---
                 msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
                 msg += f"✂️ _Ateliê de Costura & Sob Medida_\n\n"
                 msg += f"👤 *Cliente:* {row['nome']}\n"
@@ -182,23 +225,12 @@ with tab2:
                 msg += f"📐 *FICHA DE MEDIDAS:*\n"
                 
                 medidas_dict = {
-                    "📏 Ombro": row['ombro'],
-                    "📐 Cava frente": row['cava_frente'],
-                    "📐 Cava costas": row['cava_costas'],
-                    "🪡 Altura busto": row['altura_busto'],
-                    "👗 Busto": row['busto'],
-                    "↔️ Separação busto": row['separacao_busto'],
-                    "🪡 Altura cintura": row['altura_cintura'],
-                    "⏳ Cintura alta": row['cintura_alta'],
-                    "⏳ Cintura baixa": row['cintura_baixa'],
-                    "🪡 Altura quadril": row['altura_quadril'],
-                    "🧵 Quadril": row['quadril'],
-                    "👗 Tam. vestido": row['tamanho_vestido'],
-                    "🥻 Tam. saia": row['tamanho_saia'],
-                    "👔 Tam. blusa": row['tamanho_blusa'],
-                    "📏 Tam. manga": row['tamanho_manga'],
-                    "📐 Largura manga": row['largura_manga'],
-                    "👔 Colarinho": row['colarinho']
+                    "📏 Ombro": row['ombro'], "📐 Cava frente": row['cava_frente'], "📐 Cava costas": row['cava_costas'],
+                    "🪡 Altura busto": row['altura_busto'], "👗 Busto": row['busto'], "↔️ Separação busto": row['separacao_busto'],
+                    "🪡 Altura cintura": row['altura_cintura'], "⏳ Cintura alta": row['cintura_alta'], "⏳ Cintura baixa": row['cintura_baixa'],
+                    "🪡 Altura quadril": row['altura_quadril'], "🧵 Quadril": row['quadril'], "👗 Tam. vestido": row['tamanho_vestido'],
+                    "🥻 Tam. saia": row['tamanho_saia'], "👔 Tam. blusa": row['tamanho_blusa'], "📏 Tam. manga": row['tamanho_manga'],
+                    "📐 Largura manga": row['largura_manga'], "👔 Colarinho": row['colarinho']
                 }
 
                 for chave, val in medidas_dict.items():
