@@ -9,10 +9,10 @@ st.set_page_config(
     page_title="Caprichos da Vânia", 
     page_icon="✂️", 
     layout="centered",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed" # Esconde o menu por padrão no mobile para economizar espaço
 )
 
-# --- ESTILIZAÇÃO ULTRA COMPACTA PARA MOBILE ---
+# --- ESTILIZAÇÃO FEMININA OTIMIZADA PARA MOBILE (CSS PERSONALIZADO) ---
 st.markdown("""
     <style>
     /* Estilo geral */
@@ -20,36 +20,34 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
-    /* Zerar paddings extras do Streamlit na tela do celular */
+    /* Reduzir o padding superior do Streamlit no celular */
     .block-container {
-        padding-top: 0.8rem !important;
-        padding-bottom: 0.5rem !important;
-        padding-left: 0.3rem !important;
-        padding-right: 0.3rem !important;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
     }
 
-    /* FORÇAR ENCAIXE DOS DOIS BALÕES LADO A LADO SEM CORTAR */
+    /* FORÇAR AS COLUNAS A FICAREM LADO A LADO NO CELULAR */
+    [data-testid="column"] {
+        width: 50% !important;
+        flex: 1 1 calc(50% - 10px) !important;
+        min-width: 140px !important;
+    }
+
     [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
-        gap: 6px !important;
-        width: 100% !important;
-    }
-
-    [data-testid="column"] {
-        width: calc(50% - 3px) !important;
-        flex: 1 1 calc(50% - 3px) !important;
-        min-width: 0px !important; /* Evita que o elemento saia da tela */
+        gap: 8px !important;
     }
     
-    /* Título principal sem cortar */
+    /* Títulos e Cabeçalhos Compactos */
     h1 {
-        font-size: 1.35rem !important;
+        font-size: 1.6rem !important;
         color: #7A3043 !important;
         font-family: 'Helvetica Neue', sans-serif;
-        margin-bottom: 2px !important;
-        white-space: nowrap !important;
+        margin-bottom: 0px !important;
     }
 
     h2, h3 {
@@ -60,28 +58,27 @@ st.markdown("""
     .slogan {
         text-align: center;
         color: #A3586D;
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         font-weight: 500;
-        margin-top: -2px;
-        margin-bottom: 8px;
+        margin-top: -5px;
+        margin-bottom: 10px;
     }
 
     .boas-vindas {
-        font-size: 0.78rem !important;
+        font-size: 0.85rem !important;
         color: #444;
-        margin-bottom: 10px !important;
-        line-height: 1.2 !important;
+        margin-bottom: 12px !important;
     }
 
-    /* Balões Encolhidos e Ajustados */
+    /* Cartões Compactos para Celular */
     .card-feminino {
         background-color: #FFF0F3;
         border: 1.5px solid #F4C2C2;
-        border-radius: 10px 10px 0px 0px;
-        padding: 8px 4px;
+        border-radius: 12px 12px 0px 0px;
+        padding: 10px 6px;
         text-align: center;
         margin-bottom: 0px;
-        min-height: 85px;
+        min-height: 110px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -89,27 +86,27 @@ st.markdown("""
     
     .card-feminino h3 {
         color: #8C3A52 !important;
-        font-size: 0.85rem !important;
-        margin-bottom: 2px !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 4px !important;
         margin-top: 0px !important;
     }
     
     .card-feminino p {
         color: #666;
-        font-size: 0.68rem !important;
+        font-size: 0.75rem !important;
         line-height: 1.1 !important;
         margin: 0 !important;
     }
 
-    /* Ajuste do Botão Encolhido */
+    /* Ajuste de Botões em Tom Rosa Chá Compactos */
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
-        border-radius: 0px 0px 10px 10px !important;
+        border-radius: 0px 0px 12px 12px !important;
         border: none !important;
         font-weight: bold !important;
-        font-size: 0.72rem !important;
-        padding: 0.3rem 0.1rem !important;
+        font-size: 0.78rem !important;
+        padding: 0.4rem 0.2rem !important;
         transition: all 0.3s ease;
     }
 
@@ -190,10 +187,10 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     st.markdown("<p class='slogan'>Você Sonha, Nós Realizamos</p>", unsafe_allow_html=True)
     
     st.markdown("""
-    <p class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASAA!</p>
+    <p class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</p>
     """, unsafe_allow_html=True)
 
-    # LADO A LADO PERFEITO NO MOBILE
+    # LADO A LADO FORÇADO NO MOBILE
     col_card1, col_card2 = st.columns(2)
     
     # Cartão 1: Nova Medida
@@ -216,7 +213,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
         """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
-    st.markdown("<hr style='margin-top:10px; margin-bottom:8px;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin-top:15px; margin-bottom:10px;'>", unsafe_allow_html=True)
     st.caption("👈 Abra o menu lateral no canto superior para navegar.")
 
 # --- TELA 2: CADASTRO / EDIÇÃO ---
