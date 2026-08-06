@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILIZAÇÃO COMPACTA PARA CELULAR ---
+# --- ESTILIZAÇÃO COMPACTA E AJUSTE RIGOROSO PARA MOBILE ---
 st.markdown("""
     <style>
     /* Estilo geral */
@@ -20,33 +20,38 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
-    /* Espaçamento superior */
+    /* Zera margens laterais da página principal para dar máximo espaço */
     .block-container {
         padding-top: 3.2rem !important;
         padding-bottom: 1rem !important;
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
+        padding-left: 0.3rem !important;
+        padding-right: 0.3rem !important;
+        max-width: 100% !important;
     }
 
-    /* MENU LATERAL LARGURA ORIGINAL */
+    /* Menu lateral estreito */
     [data-testid="stSidebar"] {
-        width: 280px !important;
+        width: 230px !important;
+        max-width: 65vw !important;
     }
 
-    /* ENCOLHER O BLOCO DOS BALÕES NA HORIZONTAL (MAIS ESTREITOS) */
+    /* FORÇAR AS COLUNAS A FICAREM LADO A LADO SEM ESTOURAR A TELA */
     [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
-        gap: 8px !important;
-        max-width: 80% !important; /* Limita a largura horizontal dos dois balões juntos */
-        margin: 0 auto !important; /* Centraliza o bloco na tela */
+        gap: 4px !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
     [data-testid="column"] {
-        width: 50% !important;
-        flex: 1 1 50% !important;
+        width: calc(50% - 2px) !important;
+        flex: 1 1 calc(50% - 2px) !important;
+        max-width: calc(50% - 2px) !important;
         min-width: 0px !important;
+        padding: 0 !important;
     }
 
     /* Título e Slogan */
@@ -67,40 +72,49 @@ st.markdown("""
         font-size: 0.8rem;
         font-weight: 500;
         margin-top: 0px;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }
 
     .boas-vindas {
-        font-size: 0.78rem !important;
+        font-size: 0.75rem !important;
         color: #444;
         margin-bottom: 12px !important;
         line-height: 1.2 !important;
         text-align: center;
     }
 
-    /* BALÕES ENCOLHIDOS NA HORIZONTAL E VERTICAL */
+    /* BALÕES/CARTÕES ULTRA COMPACTOS PARA CABER LADO A LADO */
     .card-feminino-box {
         background-color: #FFF0F3;
         border: 1px solid #F4C2C2;
         border-radius: 8px 8px 0px 0px;
-        padding: 4px 4px;
+        padding: 6px 2px;
         text-align: center;
         box-sizing: border-box;
-        min-height: 28px !important;
+        min-height: 58px;
         display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: center;
+        width: 100%;
     }
 
     .card-feminino-box h3 {
         color: #8C3A52 !important;
-        font-size: 0.72rem !important;
-        margin: 0 !important;
+        font-size: 0.75rem !important;
+        margin-bottom: 2px !important;
+        margin-top: 0px !important;
         font-weight: bold;
-        line-height: 1.1 !important;
+        white-space: nowrap;
     }
 
-    /* BOTÕES DOS BALÕES ESTREITOS */
+    .card-feminino-box p {
+        color: #666;
+        font-size: 0.58rem !important;
+        line-height: 1.05 !important;
+        margin: 0 !important;
+    }
+
+    /* Botões dos Balões */
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
@@ -108,12 +122,9 @@ st.markdown("""
         border: none !important;
         font-weight: bold !important;
         font-size: 0.68rem !important;
-        padding: 0.15rem 0.1rem !important;
+        padding: 0.2rem 0.1rem !important;
         width: 100% !important;
-        min-height: 24px !important;
-        height: 28px !important;
-        line-height: 1 !important;
-        transition: all 0.3s ease;
+        white-space: nowrap;
     }
 
     div.stButton > button:hover {
@@ -176,7 +187,7 @@ if "menu_selecionado" not in st.session_state:
 def ir_para_pagina(nome_pagina):
     st.session_state["menu_selecionado"] = nome_pagina
 
-# Sidebar
+# Sidebar Compacta
 st.sidebar.title("🪡 Ateliê")
 st.sidebar.markdown("**Caprichos da Vânia**")
 st.sidebar.markdown("---")
@@ -196,13 +207,14 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # COLUNAS LADO A LADO REDUZIDAS NA HORIZONTAL
+    # COLUNAS ENCOLHIDAS PARA FITTAR PERFEITAMENTE LADO A LADO NO MOBILE
     c1, c2 = st.columns(2)
     
     with c1:
         st.markdown("""
             <div class="card-feminino-box">
                 <h3>📝 Nova Medida</h3>
+                <p>Cadastre 17 medidas.</p>
             </div>
         """, unsafe_allow_html=True)
         st.button("✨ Cadastrar", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
@@ -211,11 +223,12 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
         st.markdown("""
             <div class="card-feminino-box">
                 <h3>🔍 Consultar</h3>
+                <p>Envie no WhatsApp.</p>
             </div>
         """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
-    st.markdown("<hr style='margin-top:14px; margin-bottom:6px;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin-top:12px; margin-bottom:8px;'>", unsafe_allow_html=True)
     st.caption("👈 Abra o menu lateral no canto superior para navegar.")
 
 # --- TELA 2: CADASTRO / EDIÇÃO ---
