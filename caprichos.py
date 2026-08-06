@@ -167,7 +167,7 @@ st.sidebar.markdown("---")
 
 menu = st.sidebar.radio(
     "Navegação",
-    ["🏠 Início", "📝 Cadastrar Ficha", "🔍 Consultar Clientes"],
+    ["🏠 Início", "📝 Cadastrar Medida", "🔍 Consultar Clientes"],
     key="menu_selecionado"
 )
 
@@ -186,15 +186,15 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
 
     col_card1, col_card2 = st.columns(2)
     
-    # Cartão 1: Nova Ficha
+    # Cartão 1: Nova Medida
     with col_card1:
         st.markdown("""
             <div class="card-feminino">
-                <h3>📝 Nova Ficha</h3>
+                <h3>📝 Nova Medida</h3>
                 <p>Cadastre medidas e datas da cliente.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.button("✨ Abrir", key="btn_nova_ficha", on_click=ir_para_pagina, args=("📝 Cadastrar Ficha",), use_container_width=True)
+        st.button("✨ Abrir", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Medida",), use_container_width=True)
     
     # Cartão 2: Consultar
     with col_card2:
