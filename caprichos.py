@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILIZAÇÃO COMPACTA E PROPORCIONAL PARA MOBILE ---
+# --- ESTILIZAÇÃO ULTRA COMPACTA COM FLEXBOX ---
 st.markdown("""
     <style>
     /* Estilo geral */
@@ -20,35 +20,18 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
-    /* MANTÉM LARGURA CONTROLADA (sem esticar a tela) */
+    /* Zera margens laterais para dar máximo espaço */
     .block-container {
-        padding-top: 2.5rem !important;
+        padding-top: 2.8rem !important;
         padding-bottom: 1rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-        max-width: 500px !important; /* Limita a largura máxima do conteúdo central */
-        margin: 0 auto !important;
+        padding-left: 0.4rem !important;
+        padding-right: 0.4rem !important;
     }
 
     /* Menu lateral estreito */
     [data-testid="stSidebar"] {
         width: 220px !important;
         max-width: 60vw !important;
-    }
-
-    /* GARANTE QUE AS DUAS COLUNAS FIQUEM LADO A LADO E BEM PROPORCIONADAS */
-    [data-testid="stHorizontalBlock"] {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        gap: 8px !important;
-        width: 100% !important;
-    }
-
-    [data-testid="column"] {
-        width: 50% !important;
-        flex: 1 1 50% !important;
-        min-width: 0px !important;
     }
 
     /* Título e Slogan */
@@ -80,44 +63,67 @@ st.markdown("""
         text-align: center;
     }
 
-    /* BALÕES PROPORCIONAIS E COMPACTOS */
-    .card-feminino-box {
+    /* ESTRUTURA FLEXBOX PERSONALIZADA PARA FORÇAR OS 2 BALÕES LADO A LADO */
+    .container-baloes {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .card-balao {
+        flex: 1 1 50% !important;
+        width: 49% !important;
         background-color: #FFF0F3;
         border: 1px solid #F4C2C2;
         border-radius: 8px 8px 0px 0px;
-        padding: 8px 4px;
+        padding: 8px 2px;
         text-align: center;
         box-sizing: border-box;
-        min-height: 60px;
         display: flex;
         flex-direction: column;
         justify-content: center;
     }
 
-    .card-feminino-box h3 {
+    .card-balao h3 {
         color: #8C3A52 !important;
-        font-size: 0.78rem !important;
+        font-size: 0.75rem !important;
         margin-bottom: 2px !important;
         margin-top: 0px !important;
         font-weight: bold;
     }
 
-    .card-feminino-box p {
+    .card-balao p {
         color: #666;
-        font-size: 0.62rem !important;
+        font-size: 0.58rem !important;
         line-height: 1.1 !important;
         margin: 0 !important;
     }
 
-    /* Botões dos Balões */
+    /* BOTÕES INTEGRADOS AOS BALÕES */
+    .container-botoes {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 6px !important;
+        width: 100% !important;
+    }
+
+    .container-botoes > div {
+        flex: 1 1 50% !important;
+        width: 49% !important;
+    }
+
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
         border-radius: 0px 0px 8px 8px !important;
         border: none !important;
         font-weight: bold !important;
-        font-size: 0.72rem !important;
-        padding: 0.3rem 0.2rem !important;
+        font-size: 0.7rem !important;
+        padding: 0.25rem 0.1rem !important;
         width: 100% !important;
     }
 
@@ -201,25 +207,25 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # DUAL COLUMN BALOES
-    c1, c2 = st.columns(2)
-    
-    with c1:
-        st.markdown("""
-            <div class="card-feminino-box">
-                <h3>📝 Nova Medida</h3>
-                <p>Cadastre 17 medidas.</p>
-            </div>
-        """, unsafe_allow_html=True)
-        st.button("✨ Cadastrar", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
+    # 1. BALÕES LADO A LADO EM HTML PURO (Garante que nenhum suma na horizontal)
+    st.markdown("""
+    <div class="container-baloes">
+        <div class="card-balao">
+            <h3>📝 Nova Medida</h3>
+            <p>Cadastre 17 medidas.</p>
+        </div>
+        <div class="card-balao">
+            <h3>🔍 Consultar</h3>
+            <p>Envie no WhatsApp.</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
+    # 2. BOTÕES LOGO ABAIXO DOS BALÕES CORRESPONDENTES
+    c1, c2 = st.columns(2)
+    with c1:
+        st.button("✨ Cadastrar", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
     with c2:
-        st.markdown("""
-            <div class="card-feminino-box">
-                <h3>🔍 Consultar</h3>
-                <p>Envie no WhatsApp.</p>
-            </div>
-        """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
     st.markdown("<hr style='margin-top:14px; margin-bottom:8px;'>", unsafe_allow_html=True)
