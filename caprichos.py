@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILIZAÇÃO COMPACTA E AJUSTE RIGOROSO PARA MOBILE ---
+# --- ESTILIZAÇÃO COMPACTA E PROPORCIONAL PARA MOBILE ---
 st.markdown("""
     <style>
     /* Estilo geral */
@@ -20,38 +20,35 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
-    /* Zera margens laterais da página principal para dar máximo espaço */
+    /* MANTÉM LARGURA CONTROLADA (sem esticar a tela) */
     .block-container {
-        padding-top: 3.2rem !important;
+        padding-top: 2.5rem !important;
         padding-bottom: 1rem !important;
-        padding-left: 0.3rem !important;
-        padding-right: 0.3rem !important;
-        max-width: 100% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        max-width: 500px !important; /* Limita a largura máxima do conteúdo central */
+        margin: 0 auto !important;
     }
 
     /* Menu lateral estreito */
     [data-testid="stSidebar"] {
-        width: 230px !important;
-        max-width: 65vw !important;
+        width: 220px !important;
+        max-width: 60vw !important;
     }
 
-    /* FORÇAR AS COLUNAS A FICAREM LADO A LADO SEM ESTOURAR A TELA */
+    /* GARANTE QUE AS DUAS COLUNAS FIQUEM LADO A LADO E BEM PROPORCIONADAS */
     [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
-        gap: 4px !important;
+        gap: 8px !important;
         width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
     }
 
     [data-testid="column"] {
-        width: calc(50% - 2px) !important;
-        flex: 1 1 calc(50% - 2px) !important;
-        max-width: calc(50% - 2px) !important;
+        width: 50% !important;
+        flex: 1 1 50% !important;
         min-width: 0px !important;
-        padding: 0 !important;
     }
 
     /* Título e Slogan */
@@ -76,41 +73,39 @@ st.markdown("""
     }
 
     .boas-vindas {
-        font-size: 0.75rem !important;
+        font-size: 0.78rem !important;
         color: #444;
-        margin-bottom: 12px !important;
-        line-height: 1.2 !important;
+        margin-bottom: 14px !important;
+        line-height: 1.25 !important;
         text-align: center;
     }
 
-    /* BALÕES/CARTÕES ULTRA COMPACTOS PARA CABER LADO A LADO */
+    /* BALÕES PROPORCIONAIS E COMPACTOS */
     .card-feminino-box {
         background-color: #FFF0F3;
         border: 1px solid #F4C2C2;
         border-radius: 8px 8px 0px 0px;
-        padding: 6px 2px;
+        padding: 8px 4px;
         text-align: center;
         box-sizing: border-box;
-        min-height: 58px;
+        min-height: 60px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        width: 100%;
     }
 
     .card-feminino-box h3 {
         color: #8C3A52 !important;
-        font-size: 0.75rem !important;
+        font-size: 0.78rem !important;
         margin-bottom: 2px !important;
         margin-top: 0px !important;
         font-weight: bold;
-        white-space: nowrap;
     }
 
     .card-feminino-box p {
         color: #666;
-        font-size: 0.58rem !important;
-        line-height: 1.05 !important;
+        font-size: 0.62rem !important;
+        line-height: 1.1 !important;
         margin: 0 !important;
     }
 
@@ -121,10 +116,9 @@ st.markdown("""
         border-radius: 0px 0px 8px 8px !important;
         border: none !important;
         font-weight: bold !important;
-        font-size: 0.68rem !important;
-        padding: 0.2rem 0.1rem !important;
+        font-size: 0.72rem !important;
+        padding: 0.3rem 0.2rem !important;
         width: 100% !important;
-        white-space: nowrap;
     }
 
     div.stButton > button:hover {
@@ -207,7 +201,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # COLUNAS ENCOLHIDAS PARA FITTAR PERFEITAMENTE LADO A LADO NO MOBILE
+    # DUAL COLUMN BALOES
     c1, c2 = st.columns(2)
     
     with c1:
@@ -228,7 +222,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
         """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
-    st.markdown("<hr style='margin-top:12px; margin-bottom:8px;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin-top:14px; margin-bottom:8px;'>", unsafe_allow_html=True)
     st.caption("👈 Abra o menu lateral no canto superior para navegar.")
 
 # --- TELA 2: CADASTRO / EDIÇÃO ---
