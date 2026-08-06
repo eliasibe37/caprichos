@@ -5,27 +5,88 @@ from datetime import date
 import urllib.parse
 
 # Configuração da página
-st.set_page_config(page_title="Caprichos da Vânia", page_icon="✂️", layout="wide")
+st.set_page_config(page_title="Caprichos da Vânia - Ateliê", page_icon="🧵", layout="wide")
 
-# Estilização CSS personalizada
+# --- ESTILIZAÇÃO FEMININA & ELEGANTE (CSS) ---
 st.markdown("""
     <style>
-    .main-header {
-        text-align: center;
-        color: #ff4b4b;
-        margin-bottom: 5px;
+    /* Importação de Fonte Elegante */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Poppins', sans-serif;
+        background-color: #fdfbf7;
     }
-    .sub-header {
+
+    /* Cabeçalho Principal */
+    .atelier-title {
+        font-family: 'Playfair Display', serif;
+        color: #b0526e;
         text-align: center;
-        color: #6c757d;
+        font-size: 2.8rem;
+        font-weight: 600;
+        margin-bottom: 0px;
+    }
+
+    .atelier-slogan {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        color: #8c7366;
+        text-align: center;
+        font-size: 1.2rem;
         margin-bottom: 25px;
     }
-    .metric-card {
-        background-color: #f8f9fa;
+
+    /* Cartões de Métricas */
+    div[data-testid="stMetric"] {
+        background-color: #ffffff;
+        border: 1px solid #f2d6dc;
         padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid #ff4b4b;
-        margin-bottom: 10px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(176, 82, 110, 0.05);
+        text-align: center;
+    }
+    
+    div[data-testid="stMetricLabel"] {
+        color: #8c7366 !important;
+        font-weight: 500;
+    }
+
+    /* Cartões de Clientes / Resumo */
+    .client-card {
+        background: linear-gradient(135deg, #ffffff 0%, #fff8f9 100%);
+        border-left: 6px solid #b0526e;
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 15px;
+        box-shadow: 0px 3px 12px rgba(0,0,0,0.04);
+        border-top: 1px solid #fce4e9;
+        border-right: 1px solid #fce4e9;
+        border-bottom: 1px solid #fce4e9;
+    }
+
+    /* Botões do Streamlit */
+    .stButton > button {
+        border-radius: 25px !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stButton > button[kind="primary"] {
+        background-color: #b0526e !important;
+        border-color: #b0526e !important;
+        color: white !important;
+    }
+
+    .stButton > button[kind="primary"]:hover {
+        background-color: #923f58 !important;
+        border-color: #923f58 !important;
+        box-shadow: 0px 4px 12px rgba(176, 82, 110, 0.3);
+    }
+
+    /* Linhas Divisórias */
+    hr {
+        border-color: #f2d6dc;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -71,70 +132,72 @@ def init_db():
 
 init_db()
 
-# --- GERENCIAMENTO DE ESTADO DA NAVEGAÇÃO ---
+# --- GERENCIAMENTO DE NAVEGAÇÃO ---
 if 'pagina' not in st.session_state:
-    st.session_state.pagina = "🏠 Início"
+    st.session_state.pagina = "🌸 Início / Capa"
 
 # --- MENU LATERAL (SIDEBAR) ---
 with st.sidebar:
-    st.image("https://img.icons8.com/color/96/sewing-machine.png", width=80)
-    st.title("✂️ Caprichos da Vânia")
-    st.markdown("_Ateliê de Costura & Sob Medida_")
+    st.markdown("<h2 style='text-align: center; color: #b0526e;'>🧵 Caprichos da Vânia</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #8c7366; font-size: 0.9rem;'><i>Ateliê de Costura Sob Medida</i></p>", unsafe_allow_html=True)
     st.markdown("---")
     
-    opcoes_menu = ["🏠 Início", "📝 Cadastrar Cliente", "🔍 Consultar Fichas & WhatsApp"]
-    
-    # Garantir sincronização caso altere via botão na Capa
+    opcoes_menu = ["🌸 Início / Capa", "📝 Cadastrar Cliente", "🔍 Consultar Fichas & WhatsApp"]
     index_atual = opcoes_menu.index(st.session_state.pagina) if st.session_state.pagina in opcoes_menu else 0
     
-    escolha = st.radio("📌 **Navegação**", opcoes_menu, index=index_atual)
+    escolha = st.radio("✨ **Navegação**", opcoes_menu, index=index_atual)
     st.session_state.pagina = escolha
     
     st.markdown("---")
-    st.caption("Desenvolvido para o Ateliê Caprichos da Vânia v2.0")
+    st.markdown("""
+        <div style='background-color: #fff0f3; padding: 12px; border-radius: 10px; border: 1px solid #fce4e9; text-align: center;'>
+            <p style='margin:0; color: #b0526e; font-size: 0.85rem;'>💖 <b>Amor em cada ponto, perfeição em cada medida.</b></p>
+        </div>
+    """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 🏠 TELA 1: CAPA (INÍCIO / DASHBOARD)
+# 🌸 TELA 1: CAPA (INÍCIO)
 # ==============================================================================
-if st.session_state.pagina == "🏠 Início":
-    st.markdown("<h1 class='main-header'>✂️ Ateliê Caprichos da Vânia</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='sub-header'>Bem-vinda ao seu sistema de gestão de clientes e medidas!</p>", unsafe_allow_html=True)
+if st.session_state.pagina == "🌸 Início / Capa":
+    st.markdown("<h1 class='atelier-title'>✂️ Ateliê Caprichos da Vânia</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='atelier-slogan'>\"A arte de vestir seus sonhos com elegância e carinho.\"</p>", unsafe_allow_html=True)
     
-    # --- MÉTRICAS NO TOPO ---
+    # --- MÉTRICAS DE RESUMO ---
     conn = get_connection()
     df_total = pd.read_sql_query("SELECT * FROM clientes", conn)
     conn.close()
 
     col_m1, col_m2, col_m3 = st.columns(3)
     with col_m1:
-        st.metric(label="👥 Clientes Cadastrados", value=len(df_total))
+        st.metric(label="👥 Clientes Especiais", value=len(df_total))
     with col_m2:
-        st.metric(label="✂️ Atendimentos Salvos", value=len(df_total))
+        st.metric(label="🪡 Fichas Cadastradas", value=len(df_total))
     with col_m3:
-        st.metric(label="✨ Status do App", value="Online 🟢")
+        st.metric(label="✨ Ateliê", value="Aberto 🟢")
 
     st.markdown("---")
-    st.markdown("### 🎯 O que você deseja fazer hoje?")
-    st.write("Clique em um dos blocos abaixo para ir direto à tela desejada:")
+    st.markdown("<h3 style='color: #b0526e; text-align: center;'>🌸 Como posso te ajudar agora, Vânia?</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #8c7366;'>Escolha uma das opções abaixo para navegar rapidamente:</p>", unsafe_allow_html=True)
+    st.write("")
 
     # --- BLOCOS / CARTÕES CLICÁVEIS ---
     col_card1, col_card2 = st.columns(2)
 
     with col_card1:
         with st.container(border=True):
-            st.markdown("## 📝 **Novo Cadastro**")
-            st.markdown("Preencha a ficha completa com as **17 medidas**, prazos (entrega/evento), orçamento e observações do modelo.")
-            st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("➕ Ir para Cadastrar Cliente", type="primary", use_container_width=True):
+            st.markdown("<h3 style='color: #b0526e;'>📝 <b>Nova Ficha de Medidas</b></h3>", unsafe_allow_html=True)
+            st.markdown("Cadastre uma nova cliente, insira as **17 medidas**, informe prazos de entrega/evento, orçamento e observações do modelo.")
+            st.write("")
+            if st.button("✨ Ir para Cadastrar Cliente", type="primary", use_container_width=True):
                 st.session_state.pagina = "📝 Cadastrar Cliente"
                 st.rerun()
 
     with col_card2:
         with st.container(border=True):
-            st.markdown("## 🔍 **Consultar Fichas**")
-            st.markdown("Busque por nome de cliente, veja orçamentos acordados, datas e envie o relatório completo direto no **WhatsApp**.")
-            st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("🔎 Ir para Consultar Fichas", type="primary", use_container_width=True):
+            st.markdown("<h3 style='color: #b0526e;'>🔍 <b>Consultar & Enviar WhatsApp</b></h3>", unsafe_allow_html=True)
+            st.markdown("Busque por clientes salvas, veja os orçamentos acordados, detalhes do vestido e envie a **ficha completa via WhatsApp**.")
+            st.write("")
+            if st.button("📲 Ir para Consultar Fichas", type="primary", use_container_width=True):
                 st.session_state.pagina = "🔍 Consultar Fichas & WhatsApp"
                 st.rerun()
 
@@ -142,18 +205,18 @@ if st.session_state.pagina == "🏠 Início":
 # 📝 TELA 2: CADASTRAR CLIENTE
 # ==============================================================================
 elif st.session_state.pagina == "📝 Cadastrar Cliente":
-    st.markdown("## 📝 Cadastrar Nova Ficha de Cliente")
-    st.write("Preencha as informações do cliente abaixo:")
+    st.markdown("<h2 style='color: #b0526e;'>📝 Cadastrar Nova Ficha de Medidas</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #8c7366;'>Preencha os dados da cliente para salvar no banco do ateliê:</p>", unsafe_allow_html=True)
     st.markdown("---")
     
-    st.markdown("### 👤 Dados Gerais & Prazos")
-    nome = st.text_input("Nome do Cliente *")
+    st.markdown("<h4 style='color: #b0526e;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
+    nome = st.text_input("Nome da Cliente *")
     
     col_t1, col_t2 = st.columns(2)
     with col_t1:
         telefone = st.text_input("Telefone (WhatsApp)")
     with col_t2:
-        orcamento = st.text_input("Valor do Orçamento (R$)", placeholder="Ex: 250,00")
+        orcamento = st.text_input("Valor do Orçamento (R$)", placeholder="Ex: 350,00")
     
     col_dt1, col_dt2 = st.columns(2)
     with col_dt1:
@@ -162,7 +225,7 @@ elif st.session_state.pagina == "📝 Cadastrar Cliente":
         data_evento = st.date_input("🎉 Data do Evento", value=date.today())
 
     st.markdown("---")
-    st.markdown("### 📏 Ficha Geral de Medidas")
+    st.markdown("<h4 style='color: #b0526e;'>📏 Ficha Geral de Medidas (em cm)</h4>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
@@ -188,11 +251,11 @@ elif st.session_state.pagina == "📝 Cadastrar Cliente":
         colarinho = st.text_input("👔 Colarinho")
 
     st.markdown("---")
-    observacoes = st.text_area("📝 Observações Gerais / Detalhes do Modelo")
+    observacoes = st.text_area("📝 Observações Gerais / Detalhes do Modelo & Tecido")
 
-    if st.button("💾 Salvar Ficha do Cliente", type="primary", use_container_width=True):
+    if st.button("💖 Salvar Ficha no Ateliê", type="primary", use_container_width=True):
         if not nome.strip():
-            st.error("Por favor, preencha pelo menos o nome do cliente!")
+            st.error("Por favor, informe o nome da cliente!")
         else:
             conn = get_connection()
             c = conn.cursor()
@@ -212,13 +275,13 @@ elif st.session_state.pagina == "📝 Cadastrar Cliente":
             ))
             conn.commit()
             conn.close()
-            st.success(f"🎉 Ficha de **{nome}** cadastrada com sucesso!")
+            st.success(f"🎉 Ficha de **{nome}** cadastrada com sucesso com todo carinho!")
 
 # ==============================================================================
 # 🔍 TELA 3: CONSULTAR FICHAS & WHATSAPP
 # ==============================================================================
 elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
-    st.markdown("## 🔍 Consultar & Gerenciar Fichas")
+    st.markdown("<h2 style='color: #b0526e;'>🔍 Consultar Fichas & Enviar Mensagens</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
     conn = get_connection()
@@ -226,22 +289,22 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
     conn.close()
 
     if df.empty:
-        st.info("Nenhum cliente cadastrado ainda.")
+        st.info("Nenhuma cliente cadastrada ainda.")
     else:
-        busca = st.text_input("🔎 Digite um nome para filtrar")
+        busca = st.text_input("🔎 Digite um nome para filtrar no ateliê")
         if busca:
             df = df[df['nome'].str.contains(busca, case=False, na=False)]
 
         for _, row in df.iterrows():
-            valor_orc = f"R$ {row['orcamento']}" if row['orcamento'] else "Não informado"
+            valor_orc = f"R$ {row['orcamento']}" if row['orcamento'] else "A combinar"
             
-            with st.expander(f"👤 {row['nome']} | 📦 Entrega: {row['data_entrega']} | 💰 Orçamento: {valor_orc}"):
+            with st.expander(f"💖 {row['nome']} | 📦 Entrega: {row['data_entrega']} | 💰 {valor_orc}"):
                 
                 st.markdown(f"""
-                <div class='metric-card'>
-                    <h4>👤 <b>{row['nome']}</b></h4>
-                    <p><b>📱 Telefone:</b> {row['telefone']} | <b>💰 Orçamento:</b> {valor_orc}</p>
-                    <p><b>📦 Data da Entrega:</b> {row['data_entrega']} | <b>🎉 Data do Evento:</b> {row['data_evento']}</p>
+                <div class='client-card'>
+                    <h3 style='color: #b0526e; margin-top:0;'>👤 <b>{row['nome']}</b></h3>
+                    <p style='color: #555; margin-bottom: 5px;'><b>📱 Telefone:</b> {row['telefone']} | <b>💰 Orçamento:</b> {valor_orc}</p>
+                    <p style='color: #555; margin-bottom: 0;'><b>📦 Data da Entrega:</b> {row['data_entrega']} | <b>🎉 Data do Evento:</b> {row['data_evento']}</p>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -268,11 +331,12 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
                     st.write(f"👔 **Colarinho:** {row['colarinho']}")
 
                 if row['observacoes']:
-                    st.info(f"📝 **Observações:** {row['observacoes']}")
+                    st.info(f"📝 **Observações do Modelo:** {row['observacoes']}")
 
                 # --- MENSAGEM DO WHATSAPP ---
                 msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
-                msg += f"✂️ _Ateliê de Costura & Sob Medida_\n\n"
+                msg += f"✂️ _Ateliê de Costura Sob Medida_\n"
+                msg += f"🌸 _\"Amor em cada ponto, perfeição em cada medida.\"_\n\n"
                 msg += f"👤 *Cliente:* {row['nome']}\n"
                 if row['orcamento']:
                     msg += f"💰 *Valor do Orçamento:* R$ {row['orcamento']}\n"
@@ -296,7 +360,7 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
                 if row['observacoes']:
                     msg += f"\n📝 *Observações / Detalhes:*\n_{row['observacoes']}_\n"
                 
-                msg += f"\nAgradecemos a confiança! Qualquer dúvida estamos à disposição. 💖"
+                msg += f"\nAgradecemos pela confiança! Qualquer dúvida estamos à disposição. 💖"
 
                 texto_url = urllib.parse.quote(msg)
                 num_tel = "".join(filter(str.isdigit, str(row['telefone'])))
