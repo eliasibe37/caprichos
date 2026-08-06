@@ -7,20 +7,20 @@ import urllib.parse
 # Configuração da página
 st.set_page_config(page_title="Caprichos da Vânia - Vania Leonardo", page_icon="✂️", layout="wide")
 
-# --- DESIGN SOFISTICADO & ROSA ELEGANTE (CSS) ---
+# --- DESIGN SOFISTICADO & FIX PARA FICAR LADO A LADO NO CELULAR ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-    /* Limpeza de margens do Streamlit */
+    /* Limpeza de margens no topo/lados do celular */
     .block-container {
-        padding-top: 1.2rem !important;
+        padding-top: 1rem !important;
         padding-bottom: 1.5rem !important;
-        padding-left: 0.8rem !important;
-        padding-right: 0.8rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
     }
 
-    /* Fundo Rose Suave de Alta Classe */
+    /* Fundo Rose Suave */
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
         background-color: #faf4f5;
@@ -30,20 +30,19 @@ st.markdown("""
     /* CABEÇALHO DO ATELIÊ */
     .header-box {
         text-align: center;
-        padding: 5px 0 12px 0;
+        padding: 5px 0 10px 0;
     }
     .header-title {
         font-family: 'Cormorant Garamond', serif;
         color: #8c2b4e;
-        font-size: 2.1rem !important;
+        font-size: 2rem !important;
         font-weight: 700;
         margin: 0;
         line-height: 1.1;
-        letter-spacing: -0.5px;
     }
     .header-subtitle {
         color: #613346;
-        font-size: 0.82rem !important;
+        font-size: 0.8rem !important;
         font-weight: 600;
         margin: 4px 0 2px 0;
         letter-spacing: 0.5px;
@@ -53,16 +52,18 @@ st.markdown("""
         font-family: 'Cormorant Garamond', serif;
         font-style: italic;
         color: #ad3b66;
-        font-size: 1rem !important;
+        font-size: 0.95rem !important;
         margin: 2px 0 0 0;
         font-weight: 600;
     }
 
-    /* FORÇAR COLUNAS LADO A LADO NO CELULAR SEM QUEBRAR */
+    /* 🚨 FORÇAR COLUNAS LADO A LADO NO CELULAR (OVERRIDE DO STREAMLIT) 🚨 */
     [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
-        gap: 10px !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
+        width: 100% !important;
     }
 
     [data-testid="column"] {
@@ -75,20 +76,21 @@ st.markdown("""
     .metric-card {
         background: linear-gradient(145deg, #ffffff, #fff0f3);
         border: 1px solid #eab8c4;
-        border-radius: 14px;
-        padding: 10px 8px;
+        border-radius: 12px;
+        padding: 8px 4px;
         text-align: center;
-        box-shadow: 0px 4px 12px rgba(140, 43, 78, 0.06);
+        box-shadow: 0px 3px 8px rgba(140, 43, 78, 0.06);
     }
     .metric-label {
         color: #613346;
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         font-weight: 700;
         margin-bottom: 2px;
+        white-space: nowrap;
     }
     .metric-value {
         color: #8c2b4e;
-        font-size: 1.6rem;
+        font-size: 1.5rem;
         font-weight: 700;
         line-height: 1;
     }
@@ -98,46 +100,48 @@ st.markdown("""
         text-align: center;
         color: #8c2b4e;
         font-weight: 700;
-        font-size: 0.92rem;
-        margin: 14px 0 10px 0;
+        font-size: 0.9rem;
+        margin: 12px 0 8px 0;
     }
 
-    /* CARDS DE NAVEGAÇÃO */
+    /* CARDS DE NAVEGAÇÃO LADO A LADO */
     .nav-card-title {
         color: #8c2b4e;
         font-weight: 700;
-        font-size: 0.95rem;
-        margin-bottom: 4px;
+        font-size: 0.88rem;
+        margin-bottom: 3px;
         text-align: center;
+        white-space: nowrap;
     }
     .nav-card-desc {
-        color: #4a2835; /* Texto escuro bem legível */
-        font-size: 0.75rem;
+        color: #4a2835;
+        font-size: 0.7rem;
         font-weight: 500;
-        margin-bottom: 10px;
-        line-height: 1.25;
+        margin-bottom: 8px;
+        line-height: 1.2;
         text-align: center;
+        min-height: 32px; /* Garante que os cards tenham a mesma altura */
     }
 
-    /* ESTILIZAÇÃO DOS BOTÕES */
+    /* BOTÕES AJUSTADOS PARA CELULAR */
     .stButton > button {
         background: linear-gradient(135deg, #a8325c 0%, #8c2b4e 100%) !important;
         color: #ffffff !important;
         border: none !important;
-        border-radius: 22px !important;
+        border-radius: 20px !important;
         font-weight: 600 !important;
-        font-size: 0.82rem !important;
-        padding: 6px 12px !important;
-        min-height: 38px !important;
-        box-shadow: 0px 3px 8px rgba(140, 43, 78, 0.25) !important;
-        transition: all 0.2s ease;
+        font-size: 0.78rem !important;
+        padding: 4px 8px !important;
+        min-height: 36px !important;
+        width: 100% !important;
+        box-shadow: 0px 3px 8px rgba(140, 43, 78, 0.2) !important;
     }
 
     .stButton > button:active {
-        transform: scale(0.97);
+        transform: scale(0.96);
     }
 
-    /* CAMPOS DE TEXTO / INPUTS MAIS CLAROS E ELEGANTES */
+    /* INPUTS */
     .stTextInput input, .stTextArea textarea, .stDateInput input {
         border-radius: 10px !important;
         border: 1px solid #e2a8b6 !important;
@@ -148,14 +152,14 @@ st.markdown("""
     .stTextInput label, .stTextArea label, .stDateInput label {
         color: #613346 !important;
         font-weight: 600 !important;
-        font-size: 0.85rem !important;
+        font-size: 0.82rem !important;
     }
 
     hr {
         border: 0;
         height: 1px;
         background: linear-gradient(90deg, transparent, #eab8c4, transparent);
-        margin: 14px 0 !important;
+        margin: 12px 0 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -242,7 +246,7 @@ if st.session_state.pagina == "🌸 Início / Capa":
     conn.close()
     qtd = len(df_total)
 
-    # 1. MÉTRICAS LADO A LADO
+    # 1. MÉTRICAS LADO A LADO NO CELULAR
     col_m1, col_m2 = st.columns(2)
     with col_m1:
         st.markdown(f"""
@@ -262,7 +266,7 @@ if st.session_state.pagina == "🌸 Início / Capa":
 
     st.markdown("<p class='section-banner'>✨ Você sonha, nós Realizamos!</p>", unsafe_allow_html=True)
 
-    # 2. CARDS LADO A LADO COM OS BOTÕES DENTRO
+    # 2. CARDS LADO A LADO NO CELULAR
     col_c1, col_c2 = st.columns(2)
 
     with col_c1:
@@ -287,10 +291,10 @@ if st.session_state.pagina == "🌸 Início / Capa":
 # 📝 TELA 2: NOVA MEDIDA
 # ==============================================================================
 elif st.session_state.pagina == "📝 Nova Medida":
-    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.6rem; margin-bottom: 0;'>📝 Cadastrar Nova Medida</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.5rem; margin-bottom: 0;'>📝 Cadastrar Nova Medida</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
-    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.95rem; margin-bottom: 8px;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.9rem; margin-bottom: 8px;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
     nome = st.text_input("Nome da Cliente *")
     
     col_t1, col_t2 = st.columns(2)
@@ -306,7 +310,7 @@ elif st.session_state.pagina == "📝 Nova Medida":
         data_evento = st.date_input("🎉 Data Evento", value=date.today())
 
     st.markdown("---")
-    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.95rem; margin-bottom: 8px;'>📏 Medidas (cm)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.9rem; margin-bottom: 8px;'>📏 Medidas (cm)</h4>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
@@ -361,7 +365,7 @@ elif st.session_state.pagina == "📝 Nova Medida":
 # 🔍 TELA 3: CONSULTAR MEDIDAS & WHATSAPP
 # ==============================================================================
 elif st.session_state.pagina == "🔍 Consultar Medidas & WhatsApp":
-    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.6rem; margin-bottom: 0;'>🔍 Consultar Medidas & WhatsApp</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.5rem; margin-bottom: 0;'>🔍 Consultar Medidas & WhatsApp</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
     conn = get_connection()
