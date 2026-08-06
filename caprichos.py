@@ -7,32 +7,41 @@ import urllib.parse
 # Configuração da página
 st.set_page_config(page_title="Caprichos da Vânia - Vania Leonardo", page_icon="✂️", layout="wide")
 
-# --- ESTILIZAÇÃO FEMININA & OTIMIZADA PARA MOBILE (CSS) ---
+# --- ESTILIZAÇÃO ULTRA COMPACTA PARA MOBILE (CSS) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap');
+
+    /* Reduzir margens gerais do topo da página no Streamlit */
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
+    }
 
     html, body, [class*="css"] {
         font-family: 'Poppins', sans-serif;
         background-color: #fdfbf7;
     }
 
+    /* Títulos e Slogans Compactos */
     .atelier-title {
         font-family: 'Playfair Display', serif;
         color: #b0526e;
         text-align: center;
-        font-size: 2rem;
+        font-size: 1.6rem !important;
         font-weight: 600;
-        margin-bottom: 0px;
+        margin: 0 !important;
+        line-height: 1.2;
     }
 
     .atelier-subtitle {
         text-align: center;
         color: #8c7366;
-        font-size: 0.95rem;
+        font-size: 0.8rem !important;
         font-weight: 500;
-        margin-top: 2px;
-        margin-bottom: 2px;
+        margin: 2px 0 2px 0 !important;
     }
 
     .atelier-slogan {
@@ -40,48 +49,61 @@ st.markdown("""
         font-style: italic;
         color: #b0526e;
         text-align: center;
-        font-size: 1.05rem;
-        margin-bottom: 15px;
+        font-size: 0.9rem !important;
+        margin: 4px 0 10px 0 !important;
     }
 
-    /* Otimização de Métricas Lado a Lado no Celular */
+    /* FORÇAR 2 COLUNAS LADO A LADO NO CELULAR SEM EMPILHAR */
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+    }
+
+    [data-testid="column"] {
+        width: 50% !important;
+        flex: 1 1 50% !important;
+        min-width: 0 !important;
+    }
+
+    /* Métricas Super Compactas */
     div[data-testid="stMetric"] {
         background-color: #ffffff;
         border: 1px solid #f2d6dc;
-        padding: 8px 10px;
-        border-radius: 12px;
-        box-shadow: 0px 2px 8px rgba(176, 82, 110, 0.05);
+        padding: 4px 6px !important;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(176, 82, 110, 0.05);
         text-align: center;
     }
     
     div[data-testid="stMetricLabel"] {
         color: #8c7366 !important;
         font-weight: 500;
-        font-size: 0.85rem !important;
+        font-size: 0.75rem !important;
     }
 
     div[data-testid="stMetricValue"] {
-        font-size: 1.5rem !important;
+        font-size: 1.2rem !important;
         color: #b0526e !important;
+        line-height: 1 !important;
     }
 
-    /* Cartões de Clientes / Resumo */
-    .client-card {
-        background: linear-gradient(135deg, #ffffff 0%, #fff8f9 100%);
-        border-left: 6px solid #b0526e;
-        border-radius: 12px;
-        padding: 15px;
-        margin-bottom: 15px;
-        box-shadow: 0px 3px 12px rgba(0,0,0,0.04);
-        border-top: 1px solid #fce4e9;
-        border-right: 1px solid #fce4e9;
-        border-bottom: 1px solid #fce4e9;
+    /* Containers e Cards Slim */
+    div[data-testid="stVerticalBlock"] > div[data-testid="stBlock"] {
+        padding: 0px !important;
     }
 
+    .stCardContainer {
+        padding: 10px !important;
+    }
+
+    /* Botões Pequenos e Elegantes */
     .stButton > button {
-        border-radius: 25px !important;
+        border-radius: 18px !important;
         font-weight: 500 !important;
-        transition: all 0.3s ease !important;
+        padding: 4px 10px !important;
+        font-size: 0.8rem !important;
+        min-height: 38px !important;
     }
     
     .stButton > button[kind="primary"] {
@@ -90,15 +112,10 @@ st.markdown("""
         color: white !important;
     }
 
-    .stButton > button[kind="primary"]:hover {
-        background-color: #923f58 !important;
-        border-color: #923f58 !important;
-        box-shadow: 0px 4px 12px rgba(176, 82, 110, 0.3);
-    }
-
+    /* Linha divisória fina */
     hr {
         border-color: #f2d6dc;
-        margin: 15px 0;
+        margin: 10px 0 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -150,8 +167,8 @@ if 'pagina' not in st.session_state:
 
 # --- MENU LATERAL (SIDEBAR) ---
 with st.sidebar:
-    st.markdown("<h2 style='text-align: center; color: #b0526e;'>✂️ Vania Leonardo</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #8c7366; font-size: 0.95rem; margin-top: -10px;'><b>Designer de Moda</b></p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: #b0526e; margin-bottom: 0;'>✂️ Vania Leonardo</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #8c7366; font-size: 0.85rem; margin-top: 0;'><b>Designer de Moda</b></p>", unsafe_allow_html=True)
     st.markdown("---")
     
     opcoes_menu = ["🌸 Início / Capa", "📝 Cadastrar Cliente", "🔍 Consultar Fichas & WhatsApp"]
@@ -162,9 +179,8 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("""
-        <div style='background-color: #fff0f3; padding: 12px; border-radius: 10px; border: 1px solid #fce4e9; text-align: center;'>
-            <p style='margin:0; color: #b0526e; font-size: 0.85rem;'>✨ <i>"Você sonha, nós Realizamos!"</i></p>
-            <p style='margin:5px 0 0 0; color: #8c7366; font-size: 0.8rem;'><b>Costura sob medida ✂️</b></p>
+        <div style='background-color: #fff0f3; padding: 8px; border-radius: 8px; border: 1px solid #fce4e9; text-align: center;'>
+            <p style='margin:0; color: #b0526e; font-size: 0.8rem;'>✨ <i>"Você sonha, nós Realizamos!"</i></p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -173,10 +189,10 @@ with st.sidebar:
 # ==============================================================================
 if st.session_state.pagina == "🌸 Início / Capa":
     st.markdown("<h1 class='atelier-title'>✂️ Caprichos da Vânia</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='atelier-subtitle'>Vania Leonardo | Designer de Moda & Costura Sob Medida ✂️</p>", unsafe_allow_html=True)
+    st.markdown("<p class='atelier-subtitle'>Vania Leonardo | Designer de Moda</p>", unsafe_allow_html=True)
     st.markdown("<p class='atelier-slogan'>\"Quando ama o que se faz, se faz com capricho. 🥰\"</p>", unsafe_allow_html=True)
     
-    # --- MÉTRICAS COMPACTAS LADO A LADO ---
+    # --- MÉTRICAS LADO A LADO ---
     conn = get_connection()
     df_total = pd.read_sql_query("SELECT * FROM clientes", conn)
     conn.close()
@@ -185,28 +201,27 @@ if st.session_state.pagina == "🌸 Início / Capa":
     with col_m1:
         st.metric(label="👥 Clientes", value=len(df_total))
     with col_m2:
-        st.metric(label="🪡 Fichas Salvas", value=len(df_total))
+        st.metric(label="🪡 Fichas", value=len(df_total))
 
     st.markdown("---")
-    st.markdown("<h3 style='color: #b0526e; text-align: center; margin-bottom: 5px;'>✨ Você sonha, nós Realizamos!</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #8c7366; font-size: 0.9rem;'>Selecione o que deseja realizar agora:</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #b0526e; text-align: center; font-weight: 600; font-size: 0.95rem; margin: 0;'>✨ Você sonha, nós Realizamos!</p>", unsafe_allow_html=True)
 
-    # --- BLOCOS / CARTÕES CLICÁVEIS ---
+    # --- BLOCOS LADO A LADO NO MOBILE ---
     col_card1, col_card2 = st.columns(2)
 
     with col_card1:
         with st.container(border=True):
-            st.markdown("<h4 style='color: #b0526e; margin-bottom: 5px;'>📝 <b>Nova Ficha</b></h4>", unsafe_allow_html=True)
-            st.markdown("<p style='font-size: 0.85rem; color: #555;'>Cadastre dados, 17 medidas, datas e orçamento.</p>", unsafe_allow_html=True)
-            if st.button("✨ Cadastrar Cliente", type="primary", use_container_width=True):
+            st.markdown("<p style='color: #b0526e; font-weight: 600; margin:0; font-size: 0.85rem;'>📝 <b>Nova Ficha</b></p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size: 0.72rem; color: #666; margin: 2px 0 6px 0;'>Cadastre dados e medidas.</p>", unsafe_allow_html=True)
+            if st.button("✨ Cadastrar", type="primary", use_container_width=True):
                 st.session_state.pagina = "📝 Cadastrar Cliente"
                 st.rerun()
 
     with col_card2:
         with st.container(border=True):
-            st.markdown("<h4 style='color: #b0526e; margin-bottom: 5px;'>🔍 <b>Consultar Fichas</b></h4>", unsafe_allow_html=True)
-            st.markdown("<p style='font-size: 0.85rem; color: #555;'>Busque por clientes e envie pelo WhatsApp.</p>", unsafe_allow_html=True)
-            if st.button("📲 Consultar / WhatsApp", type="primary", use_container_width=True):
+            st.markdown("<p style='color: #b0526e; font-weight: 600; margin:0; font-size: 0.85rem;'>🔍 <b>Consultar</b></p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size: 0.72rem; color: #666; margin: 2px 0 6px 0;'>Busque e envie pelo Whats.</p>", unsafe_allow_html=True)
+            if st.button("📲 Consultar", type="primary", use_container_width=True):
                 st.session_state.pagina = "🔍 Consultar Fichas & WhatsApp"
                 st.rerun()
 
@@ -214,27 +229,26 @@ if st.session_state.pagina == "🌸 Início / Capa":
 # 📝 TELA 2: CADASTRAR CLIENTE
 # ==============================================================================
 elif st.session_state.pagina == "📝 Cadastrar Cliente":
-    st.markdown("<h2 style='color: #b0526e;'>📝 Cadastrar Ficha de Medidas</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #8c7366;'>Preencha as informações da cliente para salvar no sistema do ateliê:</p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #b0526e; font-size: 1.3rem;'>📝 Cadastrar Ficha de Medidas</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
-    st.markdown("<h4 style='color: #b0526e;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #b0526e; font-size: 1rem;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
     nome = st.text_input("Nome da Cliente *")
     
     col_t1, col_t2 = st.columns(2)
     with col_t1:
         telefone = st.text_input("Telefone (WhatsApp)")
     with col_t2:
-        orcamento = st.text_input("Valor do Orçamento (R$)", placeholder="Ex: 350,00")
+        orcamento = st.text_input("Orçamento (R$)", placeholder="Ex: 350,00")
     
     col_dt1, col_dt2 = st.columns(2)
     with col_dt1:
-        data_entrega = st.date_input("📦 Data da Entrega", value=date.today())
+        data_entrega = st.date_input("📦 Entrega", value=date.today())
     with col_dt2:
-        data_evento = st.date_input("🎉 Data do Evento", value=date.today())
+        data_evento = st.date_input("🎉 Evento", value=date.today())
 
     st.markdown("---")
-    st.markdown("<h4 style='color: #b0526e;'>📏 Ficha Geral de Medidas (em cm)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #b0526e; font-size: 1rem;'>📏 Medidas (cm)</h4>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
@@ -242,29 +256,29 @@ elif st.session_state.pagina == "📝 Cadastrar Cliente":
         ombro = st.text_input("📏 Ombro")
         cava_frente = st.text_input("📐 Cava frente")
         cava_costas = st.text_input("📐 Cava costas")
-        altura_busto = st.text_input("🪡 Altura do busto")
+        altura_busto = st.text_input("🪡 Altura busto")
         busto = st.text_input("👗 Busto")
-        separacao_busto = st.text_input("↔️ Separação do busto")
-        altura_cintura = st.text_input("🪡 Altura da cintura")
+        separacao_busto = st.text_input("↔️ Separação busto")
+        altura_cintura = st.text_input("🪡 Altura cintura")
         cintura_alta = st.text_input("⏳ Cintura alta")
         cintura_baixa = st.text_input("⏳ Cintura baixa")
 
     with col2:
-        altura_quadril = st.text_input("🪡 Altura do quadril")
+        altura_quadril = st.text_input("🪡 Altura quadril")
         quadril = st.text_input("🧵 Quadril")
-        tamanho_vestido = st.text_input("👗 Tamanho vestido")
-        tamanho_saia = st.text_input("🥻 Tamanho saia")
-        tamanho_blusa = st.text_input("👔 Tamanho blusa")
-        tamanho_manga = st.text_input("📏 Tamanho manga")
+        tamanho_vestido = st.text_input("👗 Tam. vestido")
+        tamanho_saia = st.text_input("🥻 Tam. saia")
+        tamanho_blusa = st.text_input("👔 Tam. blusa")
+        tamanho_manga = st.text_input("📏 Tam. manga")
         largura_manga = st.text_input("📐 Largura manga")
         colarinho = st.text_input("👔 Colarinho")
 
     st.markdown("---")
-    observacoes = st.text_area("📝 Observações Gerais / Detalhes do Modelo & Tecido")
+    observacoes = st.text_area("📝 Observações / Modelo")
 
-    if st.button("💖 Salvar Ficha no Ateliê", type="primary", use_container_width=True):
+    if st.button("💖 Salvar Ficha", type="primary", use_container_width=True):
         if not nome.strip():
-            st.error("Por favor, informe o nome da cliente!")
+            st.error("Informe o nome da cliente!")
         else:
             conn = get_connection()
             c = conn.cursor()
@@ -284,13 +298,13 @@ elif st.session_state.pagina == "📝 Cadastrar Cliente":
             ))
             conn.commit()
             conn.close()
-            st.success(f"🎉 Ficha de **{nome}** cadastrada com sucesso!")
+            st.success(f"🎉 Ficha de **{nome}** salva!")
 
 # ==============================================================================
 # 🔍 TELA 3: CONSULTAR FICHAS & WHATSAPP
 # ==============================================================================
 elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
-    st.markdown("<h2 style='color: #b0526e;'>🔍 Consultar Fichas & WhatsApp</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #b0526e; font-size: 1.3rem;'>🔍 Consultar Fichas & WhatsApp</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
     conn = get_connection()
@@ -298,49 +312,43 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
     conn.close()
 
     if df.empty:
-        st.info("Nenhuma cliente cadastrada ainda.")
+        st.info("Nenhuma cliente cadastrada.")
     else:
-        busca = st.text_input("🔎 Digite o nome para buscar no ateliê")
+        busca = st.text_input("🔎 Buscar por nome")
         if busca:
             df = df[df['nome'].str.contains(busca, case=False, na=False)]
 
         for _, row in df.iterrows():
             valor_orc = f"R$ {row['orcamento']}" if row['orcamento'] else "A combinar"
             
-            with st.expander(f"💖 {row['nome']} | 📦 Entrega: {row['data_entrega']} | 💰 {valor_orc}"):
-                
-                st.markdown(f"""
-                <div class='client-card'>
-                    <h3 style='color: #b0526e; margin-top:0;'>👤 <b>{row['nome']}</b></h3>
-                    <p style='color: #555; margin-bottom: 5px;'><b>📱 Telefone:</b> {row['telefone']} | <b>💰 Orçamento:</b> {valor_orc}</p>
-                    <p style='color: #555; margin-bottom: 0;'><b>📦 Data da Entrega:</b> {row['data_entrega']} | <b>🎉 Data do Evento:</b> {row['data_evento']}</p>
-                </div>
-                """, unsafe_allow_html=True)
+            with st.expander(f"💖 {row['nome']} | 📦 Entrega: {row['data_entrega']}"):
+                st.write(f"📱 **Tel:** {row['telefone']} | 💰 **Orçamento:** {valor_orc}")
+                st.write(f"📦 **Entrega:** {row['data_entrega']} | 🎉 **Evento:** {row['data_evento']}")
                 
                 c_m1, c_m2 = st.columns(2)
                 with c_m1:
                     st.write(f"📏 **Ombro:** {row['ombro']}")
-                    st.write(f"📐 **Cava frente:** {row['cava_frente']}")
-                    st.write(f"📐 **Cava costas:** {row['cava_costas']}")
-                    st.write(f"🪡 **Altura do busto:** {row['altura_busto']}")
+                    st.write(f"📐 **Cava fr.:** {row['cava_frente']}")
+                    st.write(f"📐 **Cava cost.:** {row['cava_costas']}")
+                    st.write(f"🪡 **Alt. busto:** {row['altura_busto']}")
                     st.write(f"👗 **Busto:** {row['busto']}")
-                    st.write(f"↔️ **Separação do busto:** {row['separacao_busto']}")
-                    st.write(f"🪡 **Altura da cintura:** {row['altura_cintura']}")
-                    st.write(f"⏳ **Cintura alta:** {row['cintura_alta']}")
-                    st.write(f"⏳ **Cintura baixa:** {row['cintura_baixa']}")
+                    st.write(f"↔️ **Sep. busto:** {row['separacao_busto']}")
+                    st.write(f"🪡 **Alt. cintura:** {row['altura_cintura']}")
+                    st.write(f"⏳ **Cint. alta:** {row['cintura_alta']}")
+                    st.write(f"⏳ **Cint. baixa:** {row['cintura_baixa']}")
 
                 with c_m2:
-                    st.write(f"🪡 **Altura do quadril:** {row['altura_quadril']}")
+                    st.write(f"🪡 **Alt. quadril:** {row['altura_quadril']}")
                     st.write(f"🧵 **Quadril:** {row['quadril']}")
-                    st.write(f"👗 **Tamanho vestido:** {row['tamanho_vestido']}")
-                    st.write(f"🥻 **Tamanho saia:** {row['tamanho_saia']}")
-                    st.write(f"👔 **Tamanho blusa:** {row['tamanho_blusa']}")
-                    st.write(f"📏 **Tamanho manga:** {row['tamanho_manga']}")
-                    st.write(f"📐 **Largura manga:** {row['largura_manga']}")
+                    st.write(f"👗 **Tam. vest.:** {row['tamanho_vestido']}")
+                    st.write(f"🥻 **Tam. saia:** {row['tamanho_saia']}")
+                    st.write(f"👔 **Tam. blusa:** {row['tamanho_blusa']}")
+                    st.write(f"📏 **Tam. manga:** {row['tamanho_manga']}")
+                    st.write(f"📐 **Larg. manga:** {row['largura_manga']}")
                     st.write(f"👔 **Colarinho:** {row['colarinho']}")
 
                 if row['observacoes']:
-                    st.info(f"📝 **Observações do Modelo:** {row['observacoes']}")
+                    st.info(f"📝 **Obs:** {row['observacoes']}")
 
                 # --- MENSAGEM DO WHATSAPP ---
                 msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
@@ -377,4 +385,4 @@ elif st.session_state.pagina == "🔍 Consultar Fichas & WhatsApp":
                 num_tel = "".join(filter(str.isdigit, str(row['telefone'])))
                 link_wa = f"https://wa.me/55{num_tel}?text={texto_url}" if num_tel else f"https://wa.me/?text={texto_url}"
 
-                st.link_button("📲 Enviar Ficha Completa via WhatsApp", link_wa, use_container_width=True)
+                st.link_button("📲 Enviar via WhatsApp", link_wa, use_container_width=True)
