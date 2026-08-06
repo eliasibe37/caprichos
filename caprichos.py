@@ -236,14 +236,14 @@ if pagina_atual == "inicio":
         <div class="card-opcao">
             <div class="card-corpo">
                 <h3>📝 Nova Medida</h3>
-                <p>Cadastre 17 medidas.</p>
+                <p>Cadastre medidas.</p>
             </div>
             <a href="?p=cadastrar" target="_self" class="btn-card">✨ Cadastrar</a>
         </div>
         <div class="card-opcao">
             <div class="card-corpo">
                 <h3>🔍 Consultar</h3>
-                <p>Envie no WhatsApp.</p>
+                <p>Consultar Medidas.</p>
             </div>
             <a href="?p=consultar" target="_self" class="btn-card">🌸 Consultar</a>
         </div>
