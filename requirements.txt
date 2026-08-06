@@ -1,10 +1,1 @@
 streamlit
-pandas
-pdfplumber
-openpyxl
-xlsxwriter
-pypdf
-reportlab
-selenium
-webdriver-manager
-BeautifulSoup
