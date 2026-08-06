@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILIZAÇÃO ULTRA COMPACTA COM FLEXBOX ---
+# --- ESTILIZAÇÃO COMPACTA E ALINHAMENTO LADO A LADO ---
 st.markdown("""
     <style>
     /* Estilo geral */
@@ -20,12 +20,12 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
-    /* Zera margens laterais para dar máximo espaço */
+    /* Margens laterais ajustadas */
     .block-container {
         padding-top: 2.8rem !important;
         padding-bottom: 1rem !important;
-        padding-left: 0.4rem !important;
-        padding-right: 0.4rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
     }
 
     /* Menu lateral estreito */
@@ -63,26 +63,31 @@ st.markdown("""
         text-align: center;
     }
 
-    /* ESTRUTURA FLEXBOX PERSONALIZADA PARA FORÇAR OS 2 BALÕES LADO A LADO */
-    .container-baloes {
+    /* FORÇAR AS DUAS COLUNAS DO STREAMLIT A FICAREM LADO A LADO NO MOBILE */
+    [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: stretch !important;
+        flex-wrap: nowrap !important;
         gap: 6px !important;
         width: 100% !important;
-        box-sizing: border-box !important;
     }
 
-    .card-balao {
+    [data-testid="column"] {
+        width: 50% !important;
         flex: 1 1 50% !important;
-        width: 49% !important;
+        min-width: 0px !important;
+    }
+
+    /* CARD/BALÃO PARTE SUPERIOR */
+    .card-balao {
         background-color: #FFF0F3;
         border: 1px solid #F4C2C2;
+        border-bottom: none;
         border-radius: 8px 8px 0px 0px;
         padding: 8px 2px;
         text-align: center;
         box-sizing: border-box;
+        min-height: 58px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -94,6 +99,7 @@ st.markdown("""
         margin-bottom: 2px !important;
         margin-top: 0px !important;
         font-weight: bold;
+        white-space: nowrap;
     }
 
     .card-balao p {
@@ -103,19 +109,7 @@ st.markdown("""
         margin: 0 !important;
     }
 
-    /* BOTÕES INTEGRADOS AOS BALÕES */
-    .container-botoes {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 6px !important;
-        width: 100% !important;
-    }
-
-    .container-botoes > div {
-        flex: 1 1 50% !important;
-        width: 49% !important;
-    }
-
+    /* BOTÕES AJUSTADOS INTEGRADOS LOGO ABAIXO DO BALÃO DA SUA COLUNA */
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
@@ -125,6 +119,7 @@ st.markdown("""
         font-size: 0.7rem !important;
         padding: 0.25rem 0.1rem !important;
         width: 100% !important;
+        margin-top: 0px !important;
     }
 
     div.stButton > button:hover {
@@ -207,25 +202,25 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # 1. BALÕES LADO A LADO EM HTML PURO (Garante que nenhum suma na horizontal)
-    st.markdown("""
-    <div class="container-baloes">
-        <div class="card-balao">
-            <h3>📝 Nova Medida</h3>
-            <p>Cadastre 17 medidas.</p>
-        </div>
-        <div class="card-balao">
-            <h3>🔍 Consultar</h3>
-            <p>Envie no WhatsApp.</p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # 2. BOTÕES LOGO ABAIXO DOS BALÕES CORRESPONDENTES
+    # COLUNAS LADO A LADO COM O BALÃO E BOTÃO RESPECTIVO DENTRO DE CADA UMA
     c1, c2 = st.columns(2)
+    
     with c1:
+        st.markdown("""
+            <div class="card-balao">
+                <h3>📝 Nova Medida</h3>
+                <p>Cadastre 17 medidas.</p>
+            </div>
+        """, unsafe_allow_html=True)
         st.button("✨ Cadastrar", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
+
     with c2:
+        st.markdown("""
+            <div class="card-balao">
+                <h3>🔍 Consultar</h3>
+                <p>Envie no WhatsApp.</p>
+            </div>
+        """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
     st.markdown("<hr style='margin-top:14px; margin-bottom:8px;'>", unsafe_allow_html=True)
