@@ -7,159 +7,168 @@ import urllib.parse
 # Configuração da página
 st.set_page_config(page_title="Caprichos da Vânia - Vania Leonardo", page_icon="✂️", layout="wide")
 
-# --- DESIGN SOFISTICADO & FIX PARA FICAR LADO A LADO NO CELULAR ---
+# --- DESIGN SOFISTICADO, COMPACTO E ADAPTADO PARA CELULAR ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-    /* Limpeza de margens no topo/lados do celular */
-    .block-container {
-        padding-top: 1rem !important;
-        padding-bottom: 1.5rem !important;
-        padding-left: 0.5rem !important;
-        padding-right: 0.5rem !important;
-    }
-
-    /* Fundo Rose Suave */
-    html, body, [class*="css"] {
+    /* Evita rolagem horizontal e limpa margens externas */
+    html, body, [data-testid="stAppViewContainer"] {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
         font-family: 'Plus Jakarta Sans', sans-serif;
         background-color: #faf4f5;
         color: #2c1820;
     }
 
-    /* CABEÇALHO DO ATELIÊ */
+    .block-container {
+        padding-top: 0.8rem !important;
+        padding-bottom: 1rem !important;
+        padding-left: 0.4rem !important;
+        padding-right: 0.4rem !important;
+        max-width: 100% !important;
+    }
+
+    /* CABEÇALHO DO ATELIÊ COMPACTO */
     .header-box {
         text-align: center;
-        padding: 5px 0 10px 0;
+        padding: 2px 0 8px 0;
     }
     .header-title {
         font-family: 'Cormorant Garamond', serif;
         color: #8c2b4e;
-        font-size: 2rem !important;
+        font-size: 1.6rem !important;
         font-weight: 700;
         margin: 0;
         line-height: 1.1;
     }
     .header-subtitle {
         color: #613346;
-        font-size: 0.8rem !important;
+        font-size: 0.72rem !important;
         font-weight: 600;
-        margin: 4px 0 2px 0;
-        letter-spacing: 0.5px;
+        margin: 2px 0 1px 0;
+        letter-spacing: 0.3px;
         text-transform: uppercase;
     }
     .header-slogan {
         font-family: 'Cormorant Garamond', serif;
         font-style: italic;
         color: #ad3b66;
-        font-size: 0.95rem !important;
-        margin: 2px 0 0 0;
+        font-size: 0.85rem !important;
+        margin: 1px 0 0 0;
         font-weight: 600;
     }
 
-    /* 🚨 FORÇAR COLUNAS LADO A LADO NO CELULAR (OVERRIDE DO STREAMLIT) 🚨 */
+    /* FORÇAR COLUNAS DENTRO DA LARGURA DA TELA SEM ESTICAR */
     [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
-        gap: 8px !important;
+        gap: 6px !important;
         width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     [data-testid="column"] {
         width: 50% !important;
         flex: 1 1 50% !important;
         min-width: 0 !important;
+        box-sizing: border-box !important;
     }
 
-    /* CARDS DE MÉTRICAS - ROSA CHIC */
+    /* CARDS DE MÉTRICAS */
     .metric-card {
         background: linear-gradient(145deg, #ffffff, #fff0f3);
         border: 1px solid #eab8c4;
-        border-radius: 12px;
-        padding: 8px 4px;
+        border-radius: 10px;
+        padding: 6px 2px;
         text-align: center;
-        box-shadow: 0px 3px 8px rgba(140, 43, 78, 0.06);
+        box-shadow: 0px 2px 6px rgba(140, 43, 78, 0.05);
     }
     .metric-label {
         color: #613346;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 700;
-        margin-bottom: 2px;
-        white-space: nowrap;
+        margin-bottom: 1px;
     }
     .metric-value {
         color: #8c2b4e;
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         font-weight: 700;
         line-height: 1;
     }
 
-    /* SUBTÍTULO EM DESTAQUE */
+    /* BANNER E NAVEGAÇÃO */
     .section-banner {
         text-align: center;
         color: #8c2b4e;
         font-weight: 700;
-        font-size: 0.9rem;
-        margin: 12px 0 8px 0;
+        font-size: 0.82rem;
+        margin: 8px 0 6px 0;
     }
 
-    /* CARDS DE NAVEGAÇÃO LADO A LADO */
     .nav-card-title {
         color: #8c2b4e;
         font-weight: 700;
-        font-size: 0.88rem;
-        margin-bottom: 3px;
+        font-size: 0.8rem;
+        margin-bottom: 2px;
         text-align: center;
-        white-space: nowrap;
     }
     .nav-card-desc {
         color: #4a2835;
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         font-weight: 500;
-        margin-bottom: 8px;
-        line-height: 1.2;
+        margin-bottom: 6px;
+        line-height: 1.15;
         text-align: center;
-        min-height: 32px; /* Garante que os cards tenham a mesma altura */
+        min-height: 26px;
     }
 
-    /* BOTÕES AJUSTADOS PARA CELULAR */
+    /* BOTÕES MENORES E MAIS AJUSTADOS */
     .stButton > button {
         background: linear-gradient(135deg, #a8325c 0%, #8c2b4e 100%) !important;
         color: #ffffff !important;
         border: none !important;
-        border-radius: 20px !important;
+        border-radius: 16px !important;
         font-weight: 600 !important;
-        font-size: 0.78rem !important;
-        padding: 4px 8px !important;
-        min-height: 36px !important;
+        font-size: 0.75rem !important;
+        padding: 2px 6px !important;
+        min-height: 32px !important;
         width: 100% !important;
-        box-shadow: 0px 3px 8px rgba(140, 43, 78, 0.2) !important;
+        box-shadow: 0px 2px 6px rgba(140, 43, 78, 0.2) !important;
     }
 
     .stButton > button:active {
         transform: scale(0.96);
     }
 
-    /* INPUTS */
+    /* INPUTS COMPACTOS PARA CABEREM NO LADO A LADO */
+    .stTextInput, .stDateInput, .stTextArea {
+        margin-bottom: -10px !important;
+    }
+
     .stTextInput input, .stTextArea textarea, .stDateInput input {
-        border-radius: 10px !important;
+        border-radius: 8px !important;
         border: 1px solid #e2a8b6 !important;
         color: #2c1820 !important;
         font-weight: 500 !important;
+        font-size: 0.78rem !important;
+        padding: 4px 8px !important;
+        height: 34px !important;
     }
 
     .stTextInput label, .stTextArea label, .stDateInput label {
         color: #613346 !important;
         font-weight: 600 !important;
-        font-size: 0.82rem !important;
+        font-size: 0.72rem !important;
+        margin-bottom: 2px !important;
     }
 
     hr {
         border: 0;
         height: 1px;
         background: linear-gradient(90deg, transparent, #eab8c4, transparent);
-        margin: 12px 0 !important;
+        margin: 10px 0 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -210,8 +219,8 @@ if 'pagina' not in st.session_state:
 
 # --- MENU LATERAL (SIDEBAR) ---
 with st.sidebar:
-    st.markdown("<h2 style='text-align: center; color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.8rem; margin-bottom: 0;'>✂️ Vania Leonardo</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #613346; font-size: 0.8rem; font-weight: 600; margin-top: 0;'>DESIGNER DE MODA</p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.5rem; margin-bottom: 0;'>✂️ Vania Leonardo</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #613346; font-size: 0.75rem; font-weight: 600; margin-top: 0;'>DESIGNER DE MODA</p>", unsafe_allow_html=True)
     st.markdown("---")
     
     opcoes_menu = ["🌸 Início / Capa", "📝 Nova Medida", "🔍 Consultar Medidas & WhatsApp"]
@@ -222,8 +231,8 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("""
-        <div style='background: #fff0f3; padding: 10px; border-radius: 10px; border: 1px solid #f2c2cd; text-align: center;'>
-            <p style='margin:0; color: #8c2b4e; font-size: 0.8rem; font-weight: 600;'>✨ <i>"Você sonha, nós Realizamos!"</i></p>
+        <div style='background: #fff0f3; padding: 8px; border-radius: 8px; border: 1px solid #f2c2cd; text-align: center;'>
+            <p style='margin:0; color: #8c2b4e; font-size: 0.75rem; font-weight: 600;'>✨ <i>"Você sonha, nós Realizamos!"</i></p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -231,7 +240,6 @@ with st.sidebar:
 # 🌸 TELA 1: CAPA (INÍCIO)
 # ==============================================================================
 if st.session_state.pagina == "🌸 Início / Capa":
-    # Cabeçalho Principal
     st.markdown("""
         <div class="header-box">
             <h1 class="header-title">✂️ Caprichos da Vânia</h1>
@@ -240,13 +248,11 @@ if st.session_state.pagina == "🌸 Início / Capa":
         </div>
     """, unsafe_allow_html=True)
     
-    # Busca contagem no BD
     conn = get_connection()
     df_total = pd.read_sql_query("SELECT * FROM clientes", conn)
     conn.close()
     qtd = len(df_total)
 
-    # 1. MÉTRICAS LADO A LADO NO CELULAR
     col_m1, col_m2 = st.columns(2)
     with col_m1:
         st.markdown(f"""
@@ -266,13 +272,12 @@ if st.session_state.pagina == "🌸 Início / Capa":
 
     st.markdown("<p class='section-banner'>✨ Você sonha, nós Realizamos!</p>", unsafe_allow_html=True)
 
-    # 2. CARDS LADO A LADO NO CELULAR
     col_c1, col_c2 = st.columns(2)
 
     with col_c1:
         st.markdown("""
             <div class="nav-card-title">📝 Nova Medida</div>
-            <div class="nav-card-desc">Cadastre dados e 17 medidas completas.</div>
+            <div class="nav-card-desc">Cadastre dados e medidas completas.</div>
         """, unsafe_allow_html=True)
         if st.button("✨ Cadastrar", key="btn_cad", use_container_width=True):
             st.session_state.pagina = "📝 Nova Medida"
@@ -291,10 +296,10 @@ if st.session_state.pagina == "🌸 Início / Capa":
 # 📝 TELA 2: NOVA MEDIDA
 # ==============================================================================
 elif st.session_state.pagina == "📝 Nova Medida":
-    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.5rem; margin-bottom: 0;'>📝 Cadastrar Nova Medida</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.3rem; margin-bottom: 0;'>📝 Cadastrar Nova Medida</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
-    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.9rem; margin-bottom: 8px;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.82rem; margin-bottom: 4px;'>👤 Dados da Cliente & Prazos</h4>", unsafe_allow_html=True)
     nome = st.text_input("Nome da Cliente *")
     
     col_t1, col_t2 = st.columns(2)
@@ -310,7 +315,7 @@ elif st.session_state.pagina == "📝 Nova Medida":
         data_evento = st.date_input("🎉 Data Evento", value=date.today())
 
     st.markdown("---")
-    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.9rem; margin-bottom: 8px;'>📏 Medidas (cm)</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color: #8c2b4e; font-size: 0.82rem; margin-bottom: 4px;'>📏 Medidas (cm)</h4>", unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
@@ -335,7 +340,7 @@ elif st.session_state.pagina == "📝 Nova Medida":
         colarinho = st.text_input("👔 Colarinho")
 
     st.markdown("---")
-    observacoes = st.text_area("📝 Observações / Detalhes do Modelo")
+    observacoes = st.text_area("📝 Observações / Detalhes")
 
     if st.button("💖 Salvar Medidas no Ateliê", use_container_width=True):
         if not nome.strip():
@@ -365,7 +370,7 @@ elif st.session_state.pagina == "📝 Nova Medida":
 # 🔍 TELA 3: CONSULTAR MEDIDAS & WHATSAPP
 # ==============================================================================
 elif st.session_state.pagina == "🔍 Consultar Medidas & WhatsApp":
-    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.5rem; margin-bottom: 0;'>🔍 Consultar Medidas & WhatsApp</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #8c2b4e; font-family: Cormorant Garamond, serif; font-size: 1.3rem; margin-bottom: 0;'>🔍 Consultar Medidas & WhatsApp</h2>", unsafe_allow_html=True)
     st.markdown("---")
     
     conn = get_connection()
@@ -375,7 +380,7 @@ elif st.session_state.pagina == "🔍 Consultar Medidas & WhatsApp":
     if df.empty:
         st.info("Nenhuma cliente cadastrada no momento.")
     else:
-        busca = st.text_input("🔎 Buscar por nome da cliente")
+        busca = st.text_input("🔎 Buscar cliente")
         if busca:
             df = df[df['nome'].str.contains(busca, case=False, na=False)]
 
