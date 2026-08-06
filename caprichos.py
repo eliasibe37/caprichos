@@ -110,7 +110,6 @@ def init_db():
         )
     ''')
     
-    # Garantir compatibilidade adicionando a coluna 'orcamento' em bancos existentes
     try:
         c.execute("ALTER TABLE clientes ADD COLUMN orcamento TEXT")
     except sqlite3.OperationalError:
@@ -147,7 +146,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     
     st.markdown("""
     ### 👋 Olá, Vânia! Seja bem-vinda.
-    Este é o seu sistema exclusivo para registrar e organizar as medidas de suas clientes com facilidade e elegância.
+    Este é o seu sistema exclusivo para registrar e organizar as medidas de suas clientes com facilidade e elegância, Lembre-se Você é a melhor ARRAZA.
     """)
     
     st.markdown("<br>", unsafe_allow_html=True)
@@ -181,20 +180,20 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
 elif st.session_state["menu_selecionado"] == "📝 Cadastrar Nova Medida":
     st.title("📝 Cadastrar Nova Medida")
     
-    st.markdown("### Dados do Cliente")
-    nome = st.text_input("Nome do Cliente *")
+    st.markdown("### 👤 Dados do Cliente")
+    nome = st.text_input("👤 Nome do Cliente *")
     
     col_inf1, col_inf2 = st.columns(2)
     with col_inf1:
-        telefone = st.text_input("Telefone (WhatsApp)")
+        telefone = st.text_input("📱 Telefone (WhatsApp)")
     with col_inf2:
-        orcamento = st.text_input("Valor do Orçamento (R$)", placeholder="Ex: 350,00")
+        orcamento = st.text_input("💰 Valor do Orçamento (R$)", placeholder="Ex: 350,00")
     
     col_dt1, col_dt2 = st.columns(2)
     with col_dt1:
-        data_entrega = st.date_input("Data da Entrega", value=date.today())
+        data_entrega = st.date_input("📦 Data da Entrega", value=date.today())
     with col_dt2:
-        data_evento = st.date_input("Data do Evento", value=date.today())
+        data_evento = st.date_input("🎉 Data do Evento", value=date.today())
 
     st.markdown("---")
     st.markdown("### 📏 Medidas Gerais")
@@ -202,28 +201,28 @@ elif st.session_state["menu_selecionado"] == "📝 Cadastrar Nova Medida":
     col1, col2 = st.columns(2)
     
     with col1:
-        ombro = st.text_input("Ombro")
-        cava_frente = st.text_input("Cava frente")
-        cava_costas = st.text_input("Cava costas")
-        altura_busto = st.text_input("Altura do busto")
-        busto = st.text_input("Busto")
-        separacao_busto = st.text_input("Separação do busto")
-        altura_cintura = st.text_input("Altura da cintura")
-        cintura_alta = st.text_input("Cintura alta")
-        cintura_baixa = st.text_input("Cintura baixa")
+        ombro = st.text_input("📐 Ombro")
+        cava_frente = st.text_input("✂️ Cava frente")
+        cava_costas = st.text_input("✂️ Cava costas")
+        altura_busto = st.text_input("📏 Altura do busto")
+        busto = st.text_input("💖 Busto")
+        separacao_busto = st.text_input("↔️ Separação do busto")
+        altura_cintura = st.text_input("📏 Altura da cintura")
+        cintura_alta = st.text_input("🎀 Cintura alta")
+        cintura_baixa = st.text_input("🎀 Cintura baixa")
 
     with col2:
-        altura_quadril = st.text_input("Altura do quadril")
-        quadril = st.text_input("Quadril")
-        tamanho_vestido = st.text_input("Tamanho vestido")
-        tamanho_saia = st.text_input("Tamanho saia")
-        tamanho_blusa = st.text_input("Tamanho blusa")
-        tamanho_manga = st.text_input("Tamanho manga")
-        largura_manga = st.text_input("Largura manga")
-        colarinho = st.text_input("Colarinho")
+        altura_quadril = st.text_input("📏 Altura do quadril")
+        quadril = st.text_input("✨ Quadril")
+        tamanho_vestido = st.text_input("👗 Tamanho vestido")
+        tamanho_saia = st.text_input("👗 Tamanho saia")
+        tamanho_blusa = st.text_input("👚 Tamanho blusa")
+        tamanho_manga = st.text_input("🧵 Tamanho manga")
+        largura_manga = st.text_input("🧵 Largura manga")
+        colarinho = st.text_input("👔 Colarinho")
 
     st.markdown("---")
-    observacoes = st.text_area("Observações Gerais / Detalhes do Modelo")
+    observacoes = st.text_area("📝 Observações Gerais / Detalhes do Modelo")
 
     if st.button("💾 Salvar Ficha de Medidas", type="primary", use_container_width=True):
         if not nome.strip():
@@ -269,33 +268,33 @@ elif st.session_state["menu_selecionado"] == "🔍 Consultar Clientes":
             
             with st.expander(f"👤 {row['nome']} | 📦 Entrega: {row['data_entrega']}"):
                 st.markdown(f"📱 **Telefone:** {row['telefone']} | 💰 **Orçamento:** {valor_orcamento}")
-                st.markdown(f"🗓️ **Data da Entrega:** {row['data_entrega']} | 🎉 **Data do Evento:** {row['data_evento']}")
+                st.markdown(f"📦 **Data da Entrega:** {row['data_entrega']} | 🎉 **Data do Evento:** {row['data_evento']}")
                 st.markdown("---")
                 
                 c_m1, c_m2 = st.columns(2)
                 with c_m1:
-                    st.write(f"• **Ombro:** {row['ombro']}")
-                    st.write(f"• **Cava frente:** {row['cava_frente']}")
-                    st.write(f"• **Cava costas:** {row['cava_costas']}")
-                    st.write(f"• **Altura do busto:** {row['altura_busto']}")
-                    st.write(f"• **Busto:** {row['busto']}")
-                    st.write(f"• **Separação do busto:** {row['separacao_busto']}")
-                    st.write(f"• **Altura da cintura:** {row['altura_cintura']}")
-                    st.write(f"• **Cintura alta:** {row['cintura_alta']}")
-                    st.write(f"• **Cintura baixa:** {row['cintura_baixa']}")
+                    st.write(f"📐 **Ombro:** {row['ombro']}")
+                    st.write(f"✂️ **Cava frente:** {row['cava_frente']}")
+                    st.write(f"✂️ **Cava costas:** {row['cava_costas']}")
+                    st.write(f"📏 **Altura do busto:** {row['altura_busto']}")
+                    st.write(f"💖 **Busto:** {row['busto']}")
+                    st.write(f"↔️ **Separação do busto:** {row['separacao_busto']}")
+                    st.write(f"📏 **Altura da cintura:** {row['altura_cintura']}")
+                    st.write(f"🎀 **Cintura alta:** {row['cintura_alta']}")
+                    st.write(f"🎀 **Cintura baixa:** {row['cintura_baixa']}")
 
                 with c_m2:
-                    st.write(f"• **Altura do quadril:** {row['altura_quadril']}")
-                    st.write(f"• **Quadril:** {row['quadril']}")
-                    st.write(f"• **Tamanho vestido:** {row['tamanho_vestido']}")
-                    st.write(f"• **Tamanho saia:** {row['tamanho_saia']}")
-                    st.write(f"• **Tamanho blusa:** {row['tamanho_blusa']}")
-                    st.write(f"• **Tamanho manga:** {row['tamanho_manga']}")
-                    st.write(f"• **Largura manga:** {row['largura_manga']}")
-                    st.write(f"• **Colarinho:** {row['colarinho']}")
+                    st.write(f"📏 **Altura do quadril:** {row['altura_quadril']}")
+                    st.write(f"✨ **Quadril:** {row['quadril']}")
+                    st.write(f"👗 **Tamanho vestido:** {row['tamanho_vestido']}")
+                    st.write(f"👗 **Tamanho saia:** {row['tamanho_saia']}")
+                    st.write(f"👚 **Tamanho blusa:** {row['tamanho_blusa']}")
+                    st.write(f"🧵 **Tamanho manga:** {row['tamanho_manga']}")
+                    st.write(f"🧵 **Largura manga:** {row['largura_manga']}")
+                    st.write(f"👔 **Colarinho:** {row['colarinho']}")
 
                 if row['observacoes']:
-                    st.markdown(f"**Obs:** {row['observacoes']}")
+                    st.markdown(f"📝 **Obs:** {row['observacoes']}")
 
                 # 🌸 MENSAGEM INTERATIVA & FORMATADA PARA WHATSAPP 🌸
                 msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
@@ -312,18 +311,29 @@ elif st.session_state["menu_selecionado"] == "🔍 Consultar Clientes":
                 msg += f"📏 *TABELA DE MEDIDAS (cm):*\n"
                 
                 medidas_dict = {
-                    "Ombro": row['ombro'], "Cava frente": row['cava_frente'], "Cava costas": row['cava_costas'],
-                    "Altura busto": row['altura_busto'], "Busto": row['busto'], "Separação busto": row['separacao_busto'],
-                    "Altura cintura": row['altura_cintura'], "Cintura alta": row['cintura_alta'], "Cintura baixa": row['cintura_baixa'],
-                    "Altura quadril": row['altura_quadril'], "Quadril": row['quadril'], "Tam. vestido": row['tamanho_vestido'],
-                    "Tam. saia": row['tamanho_saia'], "Tam. blusa": row['tamanho_blusa'], "Tam. manga": row['tamanho_manga'],
-                    "Largura manga": row['largura_manga'], "Colarinho": row['colarinho']
+                    "📐 Ombro": row['ombro'],
+                    "✂️ Cava frente": row['cava_frente'],
+                    "✂️ Cava costas": row['cava_costas'],
+                    "📏 Altura busto": row['altura_busto'],
+                    "💖 Busto": row['busto'],
+                    "↔️ Separação busto": row['separacao_busto'],
+                    "📏 Altura cintura": row['altura_cintura'],
+                    "🎀 Cintura alta": row['cintura_alta'],
+                    "🎀 Cintura baixa": row['cintura_baixa'],
+                    "📏 Altura quadril": row['altura_quadril'],
+                    "✨ Quadril": row['quadril'],
+                    "👗 Tam. vestido": row['tamanho_vestido'],
+                    "👗 Tam. saia": row['tamanho_saia'],
+                    "👚 Tam. blusa": row['tamanho_blusa'],
+                    "🧵 Tam. manga": row['tamanho_manga'],
+                    "🧵 Largura manga": row['largura_manga'],
+                    "👔 Colarinho": row['colarinho']
                 }
 
                 tem_medidas = False
                 for chave, val in medidas_dict.items():
                     if val and str(val).strip():
-                        msg += f"  ▫️ *{chave}:* {val}\n"
+                        msg += f"  {chave}: {val}\n"
                         tem_medidas = True
 
                 if not tem_medidas:
