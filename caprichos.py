@@ -3,16 +3,6 @@ import sqlite3
 import pandas as pd
 from datetime import date
 import urllib.parse
-import locale
-
-# Configura o idioma do Python para Português do Brasil (para o calendário)
-try:
-    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-except Exception:
-    try:
-        locale.setlocale(locale.LC_ALL, 'pt_BR')
-    except Exception:
-        pass
 
 # Configuração da página
 st.set_page_config(
@@ -181,6 +171,9 @@ menu = st.sidebar.radio(
     key="menu_selecionado"
 )
 
+# Data de hoje formatada
+hoje_str = date.today().strftime("%d/%m/%Y")
+
 # --- TELA 1: CAPA / INÍCIO ---
 if st.session_state["menu_selecionado"] == "🏠 Início":
     st.markdown("<h1 style='text-align: center; font-size: 1.8rem;'>🪡 Caprichos da Vânia</h1>", unsafe_allow_html=True)
@@ -228,9 +221,9 @@ elif st.session_state["menu_selecionado"] == "📏 Cadastrar Medida":
     
     col_dt1, col_dt2 = st.columns(2)
     with col_dt1:
-        data_entrega = st.date_input("Data da Entrega", value=date.today(), format="DD/MM/YYYY")
+        data_entrega = st.text_input("Data da Entrega (DD/MM/AAAA)", value=hoje_str)
     with col_dt2:
-        data_evento = st.date_input("Data do Evento", value=date.today(), format="DD/MM/YYYY")
+        data_evento = st.text_input("Data do Evento (DD/MM/AAAA)", value=hoje_str)
 
     st.markdown("---")
     st.markdown("### 📏 Medidas Gerais")
@@ -275,7 +268,7 @@ elif st.session_state["menu_selecionado"] == "📏 Cadastrar Medida":
                     largura_manga, colarinho, observacoes
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
-                nome, telefone, data_entrega.strftime("%d/%m/%Y"), data_evento.strftime("%d/%m/%Y"), 
+                nome, telefone, data_entrega, data_evento, 
                 ombro, cava_frente, cava_costas, altura_busto, busto, separacao_busto, 
                 altura_cintura, cintura_alta, cintura_baixa, altura_quadril, quadril, 
                 tamanho_vestido, tamanho_saia, tamanho_blusa, tamanho_manga, largura_manga, 
