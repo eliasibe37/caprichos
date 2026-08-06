@@ -12,55 +12,40 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILIZAÇÃO COMPATÍVEL E COMPACTA ---
+# --- ESTILIZAÇÃO COMPACTA PARA CELULAR ---
 st.markdown("""
     <style>
-    /* Estilo Geral */
+    /* Estilo geral */
     .stApp {
         background-color: #FAFAFA;
     }
     
-    /* Reduzir espaços no topo/laterais no celular */
+    /* Espaçamento superior da página */
     .block-container {
-        padding-top: 1rem !important;
-        padding-bottom: 1rem !important;
+        padding-top: 1.2rem !important;
+        padding-bottom: 0.8rem !important;
         padding-left: 0.5rem !important;
         padding-right: 0.5rem !important;
     }
 
-    /* FORÇAR OS DOIS BALÕES LADO A LADO NO CELULAR */
-    [data-testid="column"] {
-        width: 50% !important;
-        flex: 1 1 50% !important;
-        min-width: 0px !important;
-    }
-
-    [data-testid="stHorizontalBlock"] {
-        display: flex !important;
-        flex-direction: row !important;
-        gap: 8px !important;
-    }
-    
-    /* Tipografia e Títulos Ajustados */
-    h1 {
-        font-size: 1.5rem !important;
-        color: #7A3043 !important;
-        font-family: 'Helvetica Neue', sans-serif;
+    /* Título sem cortar topo nem laterais */
+    .titulo-principal {
         text-align: center;
-        margin-bottom: 0px !important;
-    }
-
-    h2, h3 {
-        color: #7A3043 !important;
+        color: #7A3043;
         font-family: 'Helvetica Neue', sans-serif;
+        font-size: 1.35rem;
+        font-weight: bold;
+        margin-top: 5px;
+        margin-bottom: 2px;
+        line-height: 1.2;
     }
     
     .slogan {
         text-align: center;
         color: #A3586D;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         font-weight: 500;
-        margin-top: -2px;
+        margin-top: 0px;
         margin-bottom: 10px;
     }
 
@@ -68,45 +53,58 @@ st.markdown("""
         font-size: 0.8rem !important;
         color: #444;
         margin-bottom: 12px !important;
-        line-height: 1.3 !important;
+        line-height: 1.25 !important;
+        text-align: center;
     }
 
-    /* Balões Encolhidos */
-    .card-feminino {
+    /* GRADE PARA FORÇAR OS DOIS BALÕES LADO A LADO NO MOBILE */
+    .grid-baloes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* Estilo dos Balões/Cartões */
+    .card-feminino-box {
         background-color: #FFF0F3;
         border: 1.5px solid #F4C2C2;
-        border-radius: 12px 12px 0px 0px;
-        padding: 8px 4px;
+        border-radius: 12px;
+        padding: 10px 6px;
         text-align: center;
-        margin-bottom: 0px;
-        min-height: 80px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-    }
-    
-    .card-feminino h3 {
-        color: #8C3A52 !important;
-        font-size: 0.85rem !important;
-        margin: 0px !important;
-    }
-    
-    .card-feminino p {
-        color: #666;
-        font-size: 0.68rem !important;
-        line-height: 1.1 !important;
-        margin: 2px 0 0 0 !important;
+        justify-content: space-between;
+        box-sizing: border-box;
     }
 
-    /* Botão Rosa Chá */
+    .card-feminino-box h3 {
+        color: #8C3A52 !important;
+        font-size: 0.85rem !important;
+        margin-bottom: 4px !important;
+        margin-top: 0px !important;
+        font-weight: bold;
+    }
+
+    .card-feminino-box p {
+        color: #666;
+        font-size: 0.68rem !important;
+        line-height: 1.15 !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Estilização dos Botões Streamlit */
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
-        border-radius: 0px 0px 12px 12px !important;
+        border-radius: 8px !important;
         border: none !important;
         font-weight: bold !important;
         font-size: 0.72rem !important;
-        padding: 0.35rem 0.1rem !important;
+        padding: 0.35rem 0.2rem !important;
+        width: 100% !important;
+        transition: all 0.3s ease;
     }
 
     div.stButton > button:hover {
@@ -182,30 +180,28 @@ menu = st.sidebar.radio(
 
 # --- TELA 1: CAPA / INÍCIO ---
 if st.session_state["menu_selecionado"] == "🏠 Início":
-    st.markdown("<h1>🪡 Caprichos da Vânia</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='slogan'>Você Sonha, Nós Realizamos</p>", unsafe_allow_html=True)
+    st.markdown("<div class='titulo-principal'>🪡 Caprichos da Vânia</div>", unsafe_allow_html=True)
+    st.markdown("<div class='slogan'>Você Sonha, Nós Realizamos</div>", unsafe_allow_html=True)
     
     st.markdown("""
-    <p class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASAA!</p>
+    <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # LADO A LADO ENCAIXADO PERFEITAMENTE
-    col_card1, col_card2 = st.columns(2)
+    # COLUNAS LADO A LADO DO STREAMLIT
+    c1, c2 = st.columns(2)
     
-    # Cartão 1: Nova Medida
-    with col_card1:
+    with c1:
         st.markdown("""
-            <div class="card-feminino">
+            <div class="card-feminino-box">
                 <h3>📝 Nova Medida</h3>
                 <p>Cadastre cliente com 17 medidas e prazos.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.button("✨ Nova Medida", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
-    
-    # Cartão 2: Consultar
-    with col_card2:
+        st.button("✨ Cadastrar", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
+
+    with c2:
         st.markdown("""
-            <div class="card-feminino">
+            <div class="card-feminino-box">
                 <h3>🔍 Consultar</h3>
                 <p>Busque fichas e envie no WhatsApp.</p>
             </div>
@@ -215,7 +211,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     st.markdown("<hr style='margin-top:12px; margin-bottom:8px;'>", unsafe_allow_html=True)
     st.caption("👈 Abra o menu lateral no canto superior para navegar.")
 
-# --- TELA 2: CADASTRO ---
+# --- TELA 2: CADASTRO / EDIÇÃO ---
 elif st.session_state["menu_selecionado"] == "📝 Cadastrar Nova Medida":
     st.title("📝 Cadastrar Nova Medida")
     
@@ -335,7 +331,7 @@ elif st.session_state["menu_selecionado"] == "🔍 Consultar Clientes":
                 if row['observacoes']:
                     st.markdown(f"📝 **Obs:** {row['observacoes']}")
 
-                # Mensagem para WhatsApp
+                # 🌸 MENSAGEM INTERATIVA & FORMATADA PARA WHATSAPP 🌸
                 msg = f"✨ *CAPRICHOS DA VÂNIA* ✨\n"
                 msg += f"👗 _Vania Leonardo | Designer de Moda_\n"
                 msg += f"💖 _\"Você Sonha, Nós Realizamos\"_\n"
