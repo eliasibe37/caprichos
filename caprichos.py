@@ -236,7 +236,7 @@ if pagina_atual == "inicio":
         <div class="card-opcao">
             <div class="card-corpo">
                 <h3>📝 Nova Medida</h3>
-                <p>Cadastre medidas.</p>
+                <p>Cadastre Medidas.</p>
             </div>
             <a href="?p=cadastrar" target="_self" class="btn-card">✨ Cadastrar</a>
         </div>
