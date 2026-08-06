@@ -218,9 +218,9 @@ elif st.session_state["menu_selecionado"] == "📏 Cadastrar Medida":
     
     col_dt1, col_dt2 = st.columns(2)
     with col_dt1:
-        data_entrega = st.date_input("Data da Entrega", value=date.today())
+        data_entrega = st.date_input("Data da Entrega", value=date.today(), format="DD/MM/YYYY")
     with col_dt2:
-        data_evento = st.date_input("Data do Evento", value=date.today())
+        data_evento = st.date_input("Data do Evento", value=date.today(), format="DD/MM/YYYY")
 
     st.markdown("---")
     st.markdown("### 📏 Medidas Gerais")
