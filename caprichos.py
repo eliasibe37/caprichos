@@ -20,20 +20,26 @@ st.markdown("""
         background-color: #FAFAFA;
     }
     
-    /* CORREÇÃO DO TOPO: Dá espaço suficiente para o título não sumir/cortar */
+    /* Espaçamento superior ideal */
     .block-container {
-        padding-top: 3.5rem !important;
+        padding-top: 3.2rem !important;
         padding-bottom: 1rem !important;
-        padding-left: 0.6rem !important;
-        padding-right: 0.6rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
     }
 
-    /* FORÇAR COLUNAS DO STREAMLIT A FICAREM LADO A LADO MESMO NO MOBILE */
+    /* REDUZIR A LARGURA DO MENU LATERAL (SIDEBAR) NO MOBILE */
+    [data-testid="stSidebar"] {
+        width: 240px !important;
+        max-width: 65vw !important;
+    }
+
+    /* FORÇAR COLUNAS A FICAREM LADO A LADO E DENTRO DA TELA */
     [data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
-        gap: 8px !important;
+        gap: 6px !important;
         width: 100% !important;
     }
 
@@ -48,7 +54,7 @@ st.markdown("""
         text-align: center;
         color: #7A3043;
         font-family: 'Helvetica Neue', sans-serif;
-        font-size: 1.4rem;
+        font-size: 1.35rem;
         font-weight: bold;
         margin-top: 0px;
         margin-bottom: 2px;
@@ -58,29 +64,29 @@ st.markdown("""
     .slogan {
         text-align: center;
         color: #A3586D;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         font-weight: 500;
         margin-top: 0px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
 
     .boas-vindas {
-        font-size: 0.8rem !important;
+        font-size: 0.78rem !important;
         color: #444;
-        margin-bottom: 14px !important;
-        line-height: 1.25 !important;
+        margin-bottom: 12px !important;
+        line-height: 1.2 !important;
         text-align: center;
     }
 
-    /* Estilo dos Balões/Cartões Encolhidos */
+    /* BALÕES COMPACTOS LADO A LADO */
     .card-feminino-box {
         background-color: #FFF0F3;
-        border: 1.5px solid #F4C2C2;
-        border-radius: 12px 12px 0px 0px;
-        padding: 8px 4px;
+        border: 1px solid #F4C2C2;
+        border-radius: 10px 10px 0px 0px;
+        padding: 6px 3px;
         text-align: center;
         box-sizing: border-box;
-        min-height: 75px;
+        min-height: 65px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -88,7 +94,7 @@ st.markdown("""
 
     .card-feminino-box h3 {
         color: #8C3A52 !important;
-        font-size: 0.82rem !important;
+        font-size: 0.78rem !important;
         margin-bottom: 2px !important;
         margin-top: 0px !important;
         font-weight: bold;
@@ -96,20 +102,20 @@ st.markdown("""
 
     .card-feminino-box p {
         color: #666;
-        font-size: 0.65rem !important;
-        line-height: 1.1 !important;
+        font-size: 0.6rem !important;
+        line-height: 1.05 !important;
         margin: 0 !important;
     }
 
-    /* Estilização dos Botões dos Balões */
+    /* Botões dos Balões */
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
-        border-radius: 0px 0px 10px 10px !important;
+        border-radius: 0px 0px 8px 8px !important;
         border: none !important;
         font-weight: bold !important;
-        font-size: 0.72rem !important;
-        padding: 0.3rem 0.1rem !important;
+        font-size: 0.7rem !important;
+        padding: 0.25rem 0.1rem !important;
         width: 100% !important;
         transition: all 0.3s ease;
     }
@@ -174,7 +180,7 @@ if "menu_selecionado" not in st.session_state:
 def ir_para_pagina(nome_pagina):
     st.session_state["menu_selecionado"] = nome_pagina
 
-# Sidebar
+# Sidebar Compacta
 st.sidebar.title("🪡 Ateliê")
 st.sidebar.markdown("**Caprichos da Vânia**")
 st.sidebar.markdown("---")
@@ -194,17 +200,17 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
     <div class='boas-vindas'>👋 <b>Olá, Vânia!</b> Registre e organize as medidas das suas clientes com praticidade. Lembre-se: Você é a melhor, ARRASA!</div>
     """, unsafe_allow_html=True)
 
-    # COLUNAS LADO A LADO GARANTIDAS
+    # COLUNAS LADO A LADO ENCOLHIDAS
     c1, c2 = st.columns(2)
     
     with c1:
         st.markdown("""
             <div class="card-feminino-box">
                 <h3>📝 Nova Medida</h3>
-                <p>Cadastre cliente com 17 medidas e prazos.</p>
+                <p>Cadastre clientes com 17 medidas e prazos.</p>
             </div>
         """, unsafe_allow_html=True)
-        st.button("✨ Nova Medida", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
+        st.button("✨ Cadastrar", key="btn_nova_medida", on_click=ir_para_pagina, args=("📝 Cadastrar Nova Medida",), use_container_width=True)
 
     with c2:
         st.markdown("""
@@ -215,7 +221,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
         """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
 
-    st.markdown("<hr style='margin-top:14px; margin-bottom:8px;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin-top:12px; margin-bottom:8px;'>", unsafe_allow_html=True)
     st.caption("👈 Abra o menu lateral no canto superior para navegar.")
 
 # --- TELA 2: CADASTRO / EDIÇÃO ---
