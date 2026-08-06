@@ -12,17 +12,26 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- ESTILIZAÇÃO FEMININA GERAL (CSS PERSONALIZADO) ---
+# --- ESTILIZAÇÃO E AJUSTE MOBILE DE PRECISÃO ---
 st.markdown("""
     <style>
     /* Estilo geral */
     .stApp {
         background-color: #FAFAFA;
+        overflow-x: hidden !important;
     }
     
+    /* REMOVE AS MARGENS LATERAIS GIGANTES DO STREAMLIT NO CELULAR */
+    [data-testid="stMainBlockContainer"], .block-container {
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
+        padding-top: 1.5rem !important;
+        max-width: 100vw !important;
+    }
+
     /* Ajuste da barra lateral no celular */
     [data-testid="stSidebar"] {
-        width: 270px !important;
+        width: 260px !important;
         max-width: 75vw !important;
         background-color: #FFF5F7 !important;
     }
@@ -36,51 +45,70 @@ st.markdown("""
     .slogan {
         text-align: center;
         color: #A3586D;
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 500;
         margin-top: -15px;
         margin-bottom: 15px;
     }
 
-    /* Cartões Personalizados da Tela Inicial (Mais compactos) */
+    /* Cartões Compactos para Tela do Celular */
     .card-feminino {
         background-color: #FFF0F3;
         border: 2px solid #F4C2C2;
         border-radius: 12px 12px 0px 0px;
-        padding: 15px 10px;
+        padding: 10px 6px;
         text-align: center;
         margin-bottom: 0px;
-        height: 100%;
+        min-height: 95px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     
     .card-feminino h3 {
         color: #8C3A52 !important;
-        margin-bottom: 5px;
-        font-size: 1.15rem;
+        margin-bottom: 4px !important;
+        font-size: 1rem !important;
     }
     
     .card-feminino p {
         color: #666;
-        font-size: 0.85rem;
-        line-height: 1.2;
-        margin-bottom: 5px;
+        font-size: 0.75rem !important;
+        line-height: 1.15;
+        margin: 0 !important;
     }
 
-    /* Botões Padrão */
+    /* Botões Padrão Encaixados */
     div.stButton > button {
         background-color: #D87080 !important;
         color: white !important;
         border-radius: 0px 0px 12px 12px !important;
         border: none !important;
         font-weight: bold !important;
-        padding: 0.5rem 0.5rem !important;
+        padding: 0.4rem 0.2rem !important;
+        font-size: 0.82rem !important;
         transition: all 0.3s ease;
         width: 100%;
     }
 
     div.stButton > button:hover {
         background-color: #B55262 !important;
-        box-shadow: 0 4px 10px rgba(181, 82, 98, 0.3);
+    }
+
+    /* FORÇAR 2 COLUNAS PERFEITAS LADO A LADO DENTRO DA TELA */
+    @media (max-width: 768px) {
+        div[data-testid="stHorizontalBlock"] {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 8px !important;
+            width: 100% !important;
+        }
+        div[data-testid="column"], div[data-testid="stColumn"] {
+            width: calc(50% - 4px) !important;
+            flex: 1 1 calc(50% - 4px) !important;
+            min-width: 0 !important;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -145,56 +173,25 @@ menu = st.sidebar.radio(
 
 # --- TELA 1: CAPA / INÍCIO ---
 if st.session_state["menu_selecionado"] == "🏠 Início":
-    # CSS EXCLUSIVO PARA A CAPA: Força os cartões a ficarem lado a lado no celular
-    st.markdown("""
-        <style>
-        @media (max-width: 768px) {
-            /* Forçar colunas lado a lado */
-            div[data-testid="stHorizontalBlock"] {
-                flex-direction: row !important;
-                flex-wrap: nowrap !important;
-                gap: 10px !important;
-            }
-            div[data-testid="column"] {
-                width: 50% !important;
-                flex: 1 1 50% !important;
-                min-width: 0 !important;
-            }
-            /* Reduzir textos para caberem bem no mobile */
-            .card-feminino {
-                padding: 10px 5px !important;
-            }
-            .card-feminino h3 {
-                font-size: 1rem !important;
-            }
-            .card-feminino p {
-                font-size: 0.7rem !important;
-            }
-            div.stButton > button {
-                font-size: 0.8rem !important;
-                padding: 0.4rem !important;
-            }
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<h1 style='text-align: center; font-size: 2rem;'>🪡 Caprichos da Vânia</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-size: 1.8rem;'>🪡 Caprichos da Vânia</h1>", unsafe_allow_html=True)
     st.markdown("<p class='slogan'>Você Sonha, Nós Realizamos</p>", unsafe_allow_html=True)
     st.markdown("---")
     
     st.markdown("""
     **👋 Olá, Vânia! Seja bem-vinda.**  
-    Este é o seu sistema para registrar as medidas de suas clientes com facilidade. Lembre-se: Você é a melhor, ARRAZA.
+    Este é o seu sistema para registrar as medidas de suas clientes. Lembre-se: Você é a melhor, ARRAZA.
     """)
     
+    st.markdown("<br>", unsafe_allow_html=True)
+
     col_card1, col_card2 = st.columns(2)
     
     # Cartão 1: Nova Ficha
     with col_card1:
         st.markdown("""
             <div class="card-feminino">
-                <h3>📝 Nova</h3>
-                <p>Cadastre uma nova cliente com medidas e datas.</p>
+                <h3>📝 Nova Ficha</h3>
+                <p>Cadastre medidas e datas da cliente.</p>
             </div>
         """, unsafe_allow_html=True)
         st.button("✨ Abrir", key="btn_nova_ficha", on_click=ir_para_pagina, args=("📝 Cadastrar Ficha",), use_container_width=True)
@@ -204,7 +201,7 @@ if st.session_state["menu_selecionado"] == "🏠 Início":
         st.markdown("""
             <div class="card-feminino">
                 <h3>🔍 Buscar</h3>
-                <p>Consulte fichas salvas e envie pelo WhatsApp.</p>
+                <p>Consulte fichas e envie no WhatsApp.</p>
             </div>
         """, unsafe_allow_html=True)
         st.button("🌸 Consultar", key="btn_consultar", on_click=ir_para_pagina, args=("🔍 Consultar Clientes",), use_container_width=True)
